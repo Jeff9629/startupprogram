@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 5 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------------//
+// The linked list data structure //
+//--------------------------------//
+console.log("The linked list data structure");
+
+// 1. Suppose you have an array with 1,000 elements and a linked list with 1,000
+//    elements. For both data structures, you want to retrieve the last entry.
+//    Does one data structure complete that operation before the other (i.e.,
+//    is it faster)? If yes, how much faster? If no, why does it take the same
+//    amount of time?
+
+// The array is faster because it can access the element directly. To access
+// the element in the linked list one would have to traverse all the way to the
+// end of the list before accessing the element, which is slow.
+
+
+
+//------------------------//
+// Creating a linked list //
+//------------------------//
+console.log("Creating a linked list");
+
+// We are going to implement the linked list data structure described in the
+// book. Instead of using 'let' we use 'var' everywhere. Note that this
+// implementation does not use the prototype (see homework). Here is a skeleton
+// that we will work on completing:
+
+function LinkedList() {
+
+  // helper class
+  function Node(element) {
+    this.element = element;
+    this.next = null;
+  }
+
+  // store length and head
+  var length = 0;
+  var head = null;
+
+  this.append = function(element) {
+    // add a new item to the end of the list
+    var node = new Node(element);
+    if (head === null) {
+      // no nodes in the list yet
+      head = node;
+    }
+    else {
+      var current = head;
+      while (current.next !== null) {
+        current = current.next;
+      }
+      // current is now the last node in the list
+      current.next = node;
+    }
+    length++;
+  };
+
+  this.insert = function(position, element) {
+    // insert a new item at a specific location
+    // make sure position is within range
+    if (position < 0 || position > length) {
+      // invalid position
+      return false;
+    }
+    else {
+      // valid position
+      var node = new Node(element);
+      // if position === 0 we have to update head
+      if (position === 0) {
+        node.next = head;
+        head = node;
+      }
+      else {
+        // we have to traverse to the position
+        var index = 0;
+        var previous = null;
+        var current = head;
+        while (index++ < position) {
+          previous = current;
+          current = current.next;
+        }
+        // make node point to the current
+        node.next = current;
+        // make previous point to node
+        previous.next = node;
+      }
+      length++;
+      return true;
+    }
+  };
+
+  this.removeAt = function(position) {
+    // remove an element from a specific location
+    if (position < 0 || position >= length) {
+      return null;
+    }
+    else {
+      var current = head;
+      if (position === 0) {
+        head = head.next;
+      }
+      else {
+        var index = 0;
+        var previous = null;
+        while (index++ < position) {
+          previous = current;
+          current = current.next;
+        }
+        previous.next = current.next;
+      }
+      length--;
+      return current.element;
+    }
+  };
+
+  this.remove = function(element) {
+    // remove a specific element from the list
+    var index = this.indexOf(element);
+    return this.removeAt(index);
+  };
+
+  this.indexOf = function(element) {
+    // return the index of an element in the list
+    var current = head;
+    var index = 0;
+    while (current) {
+      if (element === current.element) {
+        return index;
+      }
+      index++;
+      current = current.next;
+    }
+    return -1;
+  };
+
+  this.isEmpty = function() {
+    // check whether the list is empty
+    return length === 0;
+  };
+
+  this.size = function() {
+    // return the number of elements in the list
+    return length;
+  };
+
+  this.getHead = function() {
+    // return head node
+    return head;
+  };
+
+  this.toString = function() {
+    // overwrite the default toString method
+    var current = head;
+    var string = "List: ";
+    while (current) {
+      string += current.element + (current.next ? " -> " : "");
+      current = current.next;
+    }
+    return string;
+  };
+
+  this.print = function() {
+    // print to the console
+    console.log(this.toString());
+  };
+
+}
+
+// create a linked list to operate on
+var list = new LinkedList();
+
+// 1. Write pseudo code (meaning; use comments) to describe how you would
+//    implement the append method. HINT: What two scenarios can you distinguish?
+
+list.append(1);
+list.append(2);
+list.append(3);
+list.print();
+
+// 2. Translate your pseudo code into actual code and test it.
+//    HINT: Use list.print() to test your code.
+
+// 3. Repeat (1) and (2) for insert.
+list.insert(0, 0);
+list.insert(4, 4);
+list.insert(2, 13);
+list.print();
+
+// 4. Repeat (1) and (2) for removeAt.
+list.removeAt(2);
+list.removeAt(4);
+list.removeAt(0);
+list.print();
+
+// 5. Repeat (1) and (2) for remove.
+
+// 6. Repeat (1) and (2) for indexOf.
+console.log(list.indexOf(0) === -1);
+console.log(list.indexOf(1) === 0);
+console.log(list.indexOf(2) === 1);
+console.log(list.indexOf(3) === 2);
+
+// 7. Repeat (1) and (2) for isEmpty.
+
+// 8. Repeat (1) and (2) for size.
+
+// 9. Repeat (1) and (2) for getHead.
+
+
+
+//---------------------//
+// Doubly linked lists //
+//---------------------//
+console.log("Doubly linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//-----------------------//
+// Circular linked lists //
+//-----------------------//
+console.log("Circular linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two linked lists as input and returns true if
+//    they have the same elements, and false otherwise. Test your code.
+
+function isEqual(list1, list2) {
+  // implementation
+  if (list1.size() !== list2.size()) {
+    return false;
+  }
+  while (!list1.isEmpty()) {
+    var elt1 = list1.removeAt(0);
+    var elt2 = list2.removeAt(0);
+    if (elt1 !== elt2) {
+      return false;
+    }
+  }
+  return true;
+  /*
+  var current1 = list1.getHead();
+  var current2 = list2.getHead();
+  while (current1 && current2) {
+    if (current1.element !== current2.element) {
+      return false;
+    }
+    current1 = current1.next;
+    current2 = current2.next;
+  }
+  return true;
+  */
+}
+
+// 2. Implement the stack data structure using a linked list instead of an
+//    array. Use the prototype.
+
+function Stack() {
+  // put properties here (the linked list)
+  // do NOT use this.items = [];
+  this.items = new LinkedList();
+}
+
+// add methods through the prototype
+// methods
+Stack.prototype.push = function(element) {
+  this.items.insert(0, element);
+};
+
+//           1
+//      2 -> 1
+// 3 -> 2 -> 1
+
+Stack.prototype.pop = function() {
+  return this.items.removeAt(0);
+};
+
+Stack.prototype.peek = function() {
+  return this.items.getHead().element;
+};
+
+Stack.prototype.isEmpty = function() {
+  return this.items.isEmpty();
+  //return this.size() === 0;
+};
+
+Stack.prototype.size = function() {
+  return this.items.size();
+};
+
+Stack.prototype.clear = function() {
+  while (!this.items.isEmpty()) {
+    // keep deleting the zeroth element until none are left
+    this.items.removeAt(0);
+  }
+};
+
+Stack.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.print();
+console.log("stack.size() === 3: " + (stack.size() === 3));
+console.log("stack.peek() === 3: " + (stack.peek() === 3));
+console.log("stack.pop() === 3: " + (stack.pop() === 3));
+console.log("stack.pop() === 2: " + (stack.pop() === 2));
+console.log("stack.pop() === 1: " + (stack.pop() === 1));
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+stack.push(1);
+stack.clear();
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 11 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//------------------------//
+// The sorting algorithms //
+//------------------------//
+console.log("The sorting algorithms");
+
+// 1. Implement the ArrayList constructor.
+function ArrayList(){
+ var array = []; //{1}
+ this.insert = function(item){ //{2}
+  array.push(item);
+ };
+ this.toString= function(){ //{3}
+  return array.join();
+ };
+ this.size= function(idx){
+   return array.length;
+ };
+ this.get = function(idx){
+   return array[idx];
+ }
+ var swap = function(array, index1, index2){
+  var aux = array[index1];
+  array[index1] = array[index2];
+  array[index2] = aux;
+ };
+ this.bubbleSort = function(){
+  var length = array.length; //{1}
+  for (var i=0; i<length; i++){ //{2}
+   for (var j=0; j<length-1; j++ ){ //{3}
+     if (array[j] > array[j+1]){ //{4}
+       swap(array, j, j+1); //{5}
+     }
+   }
+  }
+ };
+ this.selectionSort = function(){
+  var length = array.length, //{1}
+  indexMin;
+  for (var i=0; i<length-1; i++){ //{2}
+   indexMin = i; //{3}
+   for (var j=i; j<length; j++){ //{4}
+     if(array[indexMin]>array[j]){ //{5}
+       indexMin = j; //{6}
+     }
+   }
+   if (i !== indexMin){ //{7}
+     swap(array, i, indexMin);
+   }
+  }
+ };
+ this.sequentialSearch = function(item){
+  for (var i=0; i<array.length; i++){ //{1}
+    if (item === array[i]){ //{2}
+      return i; //{3}
+    }
+  }
+  return -1; //{4}
+};
+}
+// 2. Implement the createNonSortedArray(size) function from the book.
+function createNonSortedArray(size){ //{6}
+ var array = new ArrayList();
+ for (var i = size; i> 0; i--){
+   array.insert(i);
+ }
+ return array;
+}
+// 3. Implement Bubble Sort and test your code.
+console.log("Bubble Sort");
+var array = createNonSortedArray(5); //{7}
+console.log(array.toString()); //{8}
+array.bubbleSort(); //{9}
+console.log(array.toString()); //{10}
+// 4. Implement Selection Sort and test your code.
+console.log("Selection Sort");
+array2 = createNonSortedArray(5);
+console.log(array2.toString());
+array2.selectionSort();
+console.log(array2.toString());
+//----------------------//
+// Searching algorithms //
+//----------------------//
+console.log("Searching algorithms");
+
+// 1. Implement the sequential search and test your code.
+console.log("Sequential Sort");
+array3 = createNonSortedArray(5);
+console.log(array3.sequentialSearch(3));
+console.log(array3.sequentialSearch(-3));
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two array lists as input and returns true if
+//    they are equal when sorted, and false otherwise. Test your code.
+
+function isEqualWhenSorted(arr1, arr2) {
+arr1.selectionSort();
+arr2.selectionSort();
+  if (arr1.size() !== arr2.size()) {
+      return false;
+    }
+    for (var i = 0; i < arr1.size(); i++){
+      if (arr1.get(i) === arr2.get(i));
+  return true;
+  }
+}
+
+var arr1 = createNonSortedArray(10);
+var arr2 = createNonSortedArray(10);
+console.log(isEqualWhenSorted(arr1, arr2) === true);
+
+// 2. Can you implement the same functionality without actually sorting the
+//    arrays, i.e., by using search only?
+
+function isEqualUnSorted(arr1, arr2) {
+    if (arr1.size() !== arr2.size()) {
+      return false;
+    }
+    for (var i = 0; i < arr1.size(); i++){
+      if (arr1.get(i) === arr2.get(i));
+  return true;
+  }
+}
+
+var arr1 = createNonSortedArray(10);
+var arr2 = createNonSortedArray(10);
+console.log(isEqualUnSorted(arr1, arr2) === true);
+console.log("I tried.");
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

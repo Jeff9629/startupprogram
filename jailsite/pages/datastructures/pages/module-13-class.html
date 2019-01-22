@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 13 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//----------------//
+// Big O notation //
+//----------------//
+console.log("Big O notation");
+
+// 1. Analyze the complexity of the isPalindrome function below. Make a
+//    distinction between best, worst, and average case complexity.
+
+function isPalindrome(str) {
+  for (var i = 0; i < str.length/2; i++) {
+    if (str[i] !== str[str.length-i-1]) {
+      return false;
+    }
+  }
+  return true;
+}
+console.log("O(1) would be the best.");
+console.log("O(n/2) would be the worst.")
+
+//----------------//
+// Linear Cost //
+//----------------//
+console.log("Linear Cost");
+
+function sequentialSearch(array, item){
+  for (var i=0; i<array.length; i++) {
+    if (item === array[i]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function sequentialSearch(array, item) {
+  var cost = 0;
+  for (var i=0; i<array.length; i++) {
+    cost++;
+    if (item === array[i]) {
+      return i;
+    }
+  }
+  console.log("cost for sequential search with input size " + array.length + " is " + cost);
+  return -1;
+}
+var arr = Array(1, 2, 3, 4, 5, 6);
+sequentialSearch(arr, 2);
+
+//----------------//
+// Quadratic Cost //
+//----------------//
+console.log("Quadratic Cost");
+
+function bubbleSort(array) {
+  var length = array.length;
+  var cost = 0;
+  for (var i=0; i<length; i++) {
+    cost++;
+    for (var j=0; j<length-1; j++){
+      cost++;
+      if (array[j] > array[j+1]){
+        swap (array, j, j+1);
+      }
+    }
+  }
+  console.log("cost for bubbleSort with input size " + length + " is " + cost)
+}
+
+bubbleSort(arr);
+// 2. Write a program that finds the minimum element in a stack in O(1) time
+//    complexity. Note that earlier solutions searched through the elements on
+//    the stack but that leads to an O(n) solution.
+//    NOTE: this question is sometimes asked on interviews.
+
+
+
+//----------------------------//
+// Having fun with algorithms //
+//----------------------------//
+console.log("Having fun with algorithms");
+
+// 1. Solve Project Euler problem 1.
+
+var numbers = []
+
+for (var i = 0;  i < 1000; i++) {
+  if ( i % 3 === 0 || i % 5 === 0) {
+     numbers.push(i);
+  }
+};
+var sum = 0;
+for (var i = 0; i < numbers.length; i++) {
+  sum += numbers[i];
+}
+console.log(sum);
+
+// 2. Solve Project Euler problem 2.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. The travelling salesman problem is a another classic problem and we are
+//    going to solve it using a greedy algorithm. Before starting, please read
+//    through the article on Wikipedia:
+//      https://en.wikipedia.org/wiki/Travelling_salesman_problem
+//    Then implement the following:
+//    (a) Create a graph that represents the example symmetric TSP problem on
+//        the Wikipedia page.
+//    (b) Implement a greedy search that finds the shortest path. You should
+//        have the following steps: (1) pick node A as the starting position,
+//        (2) pick the closest neighbor that has not been visited as the next
+//        city to visit, (3) continue this process until returning to A,
+//        (4) print the final length of the path and also the sequence of
+//        the cities.
+//    (c) Check your results, do they make sense? Is is the optimal solution?
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

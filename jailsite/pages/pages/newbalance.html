@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Loan Payoff Calculator</title>
+</head>
+<body>
+Check console for answer. Hopefully this worked for you. <a href="programhome.html">Click here to return home.</a><script lang="JavaScript">
+  /***********************************************
+  *              Balance after n payments        *
+  *                                              *
+  * b - balance after n periods                  *
+  * a - original amount
+  * p - Payment
+  * i - Interest per period
+  *
+  *
+  ***********************************************/
+
+function monthlyPayment(pv, freq, rate, periods)
+{
+    //monthly -> freq , yearly -> periods
+    //rate is interest/100/12
+    //yearly converted to monthtly converted to percentage
+    rate = rate / freq / 100;
+
+    var x = Math.pow(1 + rate, periods);
+    return (pv * x * rate) / (x - 1);
+}
+	function payoffAmount(a, ip, p, ipt)
+	{
+		return(a * (ip) - (p/ipt) * (ip - 1))
+	}
+//
+////Calculate the balance on a loan/////
+//  a - amount of loan
+//  p - Regular Monthly Payment
+//  i - Loans Interest Rate
+//  n - Number of Payments Remaining
+//  b - Present Value of the Loan
+///
+//** implies Math.pow(x,y)
+// Math.pow( (1+i),n)
+//   b = a * (1 +i)**n  - (p/i) * ((1+i)**n-1)
+//
+////
+
+
+
+
+var s = prompt("Enter Loan amount, Interest, Payments Remaining", "18000, 14.25, 24");
+
+var loanData = s.split(',');
+var a  = loanData[0];
+var i  = loanData[1];
+var n  = loanData[2];
+
+var p = monthlyPayment(a, 12, i, 36);
+ipt  = (i/12)/100.00;
+
+//i = i/12;
+var ip = Math.pow( (1+ipt), n);
+//console.log( "a*ip %.2f p/i: %f ", a*ip, p/ipt);
+b = a * ( ip ) - (p/ipt) * (ip - 1);
+
+console.log( "Function value: %.2f")
+
+pv = p *  (1 - Math.pow( (1 + ipt), -n) )  / ipt ;
+console.log("A monthly payment of: %.2f is required to borrow: $%.2f at %.2f% . Paying monthly installments for 3 years",
+ p,a,i);
+console.log( "After 2 years you will owe: $%.2f and when you finish you will have paid: $%.2f", b, p*36) ;
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 13 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//----------------//
+// Big O notation //
+//----------------//
+console.log("Big O notation");
+
+// 1. What is the worst case complexity of the following function?
+console.log("O(n^2) would be the worst, since the equation is a palindrome all of the numbers are duplicates.")
+function hasDuplicates(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    for (var j = 0; j < arr.length; j++) {
+      if (i !== j && arr[i] === arr[j]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// 2. Implement a faster version of the same function and analyze the
+//    complexity of this approach.
+
+function hasDuplicatesFast(arr) {
+var array = [];
+  for(var i = 0; i <= arr.length; i++) {
+      if(array[arr[i]] === undefined) {
+          array[arr[i]] = 1;
+      } else {
+          return true;
+      }
+  }
+  return false;
+}
+console.log("This equation uses O(n) since there is only one loop involved.")
+//----------------------------//
+// Having fun with algorithms //
+//----------------------------//
+console.log("Having fun with algorithms");
+
+// 1. Solve http://www.spoj.com/problems/PALIN/
+
+function reverse(n) {
+  var rev = 0;
+  while (n !== 0) {
+   rev *= 10;
+   rev += n % 10;
+   n -= n % 10;
+   n /= 10;
+  }
+  return rev;
+}
+function findSmallestPalindrome(k) {
+  var start = k;
+  var isPalindrome = false;
+  var rev;
+  while(isPalindrome === false){
+        k++;
+    rev = reverse(k);
+    if(k === rev) {
+      return k;
+    }
+  }
+  return -1;
+}
+console.log(findSmallestPalindrome(808) === 818);
+console.log(findSmallestPalindrome(2133) === 2222);
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Solve https://csacademy.com/contest/interview-archive/task/intersecting-rectangles/
+//    What is the runtime complexity of your solution?
+//    HINT: Try to break down the problems into smaller steps. For example,
+//          find a convenient way to represent rectangles and define a function
+//          that tests whether one rectangle is inside another. Then test your
+//          code on just two rectangles first to make sure it works.
+
+function Rectangle(recArr) {
+  this.x1 = recArr[0];
+  this.y1 = recArr[1];
+  this.x2 = recArr[2];
+  this.y2 = recArr[3];
+}
+
+var rect1 = new Rectangle([1, 1, 7, 10]);
+var rect2 = new Rectangle([3, 5, 10, 8]);
+var rect3 = new Rectangle([3, 2, 5, 8]);
+var rect4 = new Rectangle([7, 3, 10, 10]);
+var rect5 = new Rectangle([1, 1, 5, 5]);
+var rect6 = new Rectangle([3, 2, 6, 4]);
+var rect7 = new Rectangle([4, 8, 8, 10]);
+var rect8 = new Rectangle([3, 9, 7,10]);
+
+function intersect(r1, r2){
+  var minXsideR1 = Math.min(r1.x1, r1.x2);
+  var maxXsideR1 = Math.max(r1.x1, r1.x2);
+  var minYsideR1 = Math.min(r1.y1, r1.y2);
+  var maxYsideR1 = Math.max(r1.y1, r1.y2);
+  var minXsideR2 = Math.min(r2.x1, r2.x2);
+  var maxXsideR2 = Math.max(r2.x1, r2.x2);
+  var minYsideR2 = Math.min(r2.y1, r2.y2);
+  var maxYsideR2 = Math.max(r2.y1, r2.y2);
+
+  if(((r1.x1 >= minXsideR2 && r1.x1 <= maxXsideR2)||
+     (r1.x2 >= minXsideR2 && r1.x2 <= maxXsideR2) ||
+     (r2.x1 >= minXsideR1 && r2.x1 <= maxXsideR1) ||
+     (r2.x2 >= minXsideR1 && r2.x2 <= maxXsideR1))&&
+    ((r1.y1 >= minYsideR2 && r1.y1 <= maxYsideR2) ||
+     (r1.y2 >= minYsideR2 && r1.y2 <= maxYsideR2) ||
+     (r2.y1 >= minYsideR1 && r2.y1 <= maxYsideR1) ||
+     (r2.y2 >= minYsideR1 && r2.y2 <= maxYsideR1))
+   ){
+     return true;
+   }
+   return false;
+}
+
+console.log("Rectangles 1 and 2");
+console.log(intersect(rect1, rect2));
+
+console.log("Rectangles 3 and 4");
+console.log(intersect(rect3, rect4));
+
+var rectangleArray = [rect5, rect6, rect7, rect8];
+
+var count = 0;
+for(var i = 0; i < rectangleArray.length; i++){
+  for(var j = i+1; j < rectangleArray.length; j++){
+    if(intersect(rectangleArray[i], rectangleArray[j])){
+      count++;
+    }
+  }
+}
+
+console.log("The " + rectangleArray.length + " rectangles intersect " + count + " times.")
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

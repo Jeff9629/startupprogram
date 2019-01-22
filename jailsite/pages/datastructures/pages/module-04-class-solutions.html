@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 4 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------//
+// The queue data structure //
+//--------------------------//
+console.log("The queue data structure");
+
+// 1. Describe the difference between a stack and a queue. Give one example
+//    where a stack is appropriate and one example where a queue is
+//    appropriate (that has not yet been discussed in class).
+
+
+
+//------------------//
+// Creating a queue //
+//------------------//
+console.log("Creating a queue");
+
+// 1. Implement the queue data structure described in the book. Instead of
+//    using 'let items = [];' use 'var items = []'. Note that this
+//    implementation does not use the prototype (see homework).
+
+function Queue() {
+  // properties and methods go here
+  var items = [];
+
+  this.enqueue = function(element) {
+    items.push(element);
+  };
+
+  this.dequeue = function() {
+    return items.shift();
+  };
+
+  this.front = function() {
+    return items[0];
+  };
+
+  this.isEmpty = function() {
+    return items.length === 0;
+  };
+
+  this.size = function() {
+    return items.length;
+  };
+
+  this.print = function() {
+    return console.log(items.toString());
+  };
+}
+
+// 2. Write a simple test program that shows your queue works.
+
+var queue = new Queue();
+queue.enqueue(1);
+queue.enqueue(2);
+queue.enqueue(3);
+queue.print();
+console.log(queue.size() === 3);
+console.log(queue.isEmpty() === false);
+console.log(queue.front() === 1);
+console.log(queue.dequeue() === 1);
+console.log(queue.dequeue() === 2);
+console.log(queue.dequeue() === 3);
+console.log(queue.size() === 0);
+console.log(queue.isEmpty() === true);
+
+
+
+//-------------------------------------------//
+// The Queue class using ECMAScript 6 syntax //
+//-------------------------------------------//
+console.log("The Queue class using ECMAScript 6 syntax");
+
+// Skip.
+
+
+
+//--------------------//
+// The priority queue //
+//--------------------//
+console.log("The priority queue");
+
+// The following class is used below.
+
+function QueueElement(element, priority) {
+  this.element = element;
+  this.priority = priority;
+}
+
+// 1. Finish the implementation below for the priority queue. Note that this
+//    implementation does not use the prototype (see homework).
+
+function PriorityQueue() {
+  var items = [];
+
+  this.enqueue = function(element, priority) {
+    // we need to create a queue element that stores the priority as well
+    var queueElement = new QueueElement(element, priority);
+
+    // insert into priority queue (difficult part)
+    // note that this should be a min priority queue, meaning a lower value
+    // gets priority over a higher value
+    // keep track of whether we added or not
+    var added = false;
+    // loop through the existing items
+    for (var i = 0; i < items.length; i++) {
+      // if the new priority is less than the priority of the current item
+      if (queueElement.priority < items[i].priority) {
+        items.splice(i, 0, queueElement);
+        added = true;
+        break;
+      }
+    }
+    if (!added) {
+      items.push(queueElement);
+    }
+  };
+
+  // add the other methods as well
+  this.print = function() {
+    for (var i = 0; i < items.length; i++) {
+      console.log(`${items[i].element} - ${items[i].priority}`);
+    }
+  };
+
+  this.dequeue = function() {
+    return items.shift().element;
+  };
+
+}
+
+// 2. Write a simple test that makes sure the priority queue works as expected.
+
+var pqueue = new PriorityQueue();
+pqueue.enqueue("John", 2);
+pqueue.enqueue("Jack", 1);
+pqueue.enqueue("Camila", 1);
+// Jack Camila John
+pqueue.print();
+console.log(pqueue.dequeue());
+
+
+
+//---------------------------------//
+// The circular queue - Hot Potato //
+//---------------------------------//
+console.log("The circular queue - Hot Potato");
+
+// 1. Finish the implementation for the hot potato game. nameList contains the
+//    names of the participants, and num is how many times the potato is passed
+//    before a participant is ejected from the game (the one that holds the
+//    potato). Note that this is effectively a simulation of the game.
+
+function hotPotato(nameList, num) {
+  // create a queue to store the names
+  var queue = new Queue();
+
+  // add the names to the queue
+  for (var i = 0; i < nameList.length; i++) {
+    queue.enqueue(nameList[i]);
+  }
+
+  // while there is more that one name in the queue
+  while (queue.size() > 1) {
+    // dequeue and enqueue a name num times
+    for (var i = 0; i < num; i++) {
+      var item = queue.dequeue();
+      queue.enqueue(item);
+    }
+
+    // then dequeue one more time, which is the participant that is ejected
+    var item = queue.dequeue();
+    console.log("eliminate: " + item);
+  }
+  // /while (end of while loop)
+
+  // the person that remains in the queue wins
+  console.log("winner: " + queue.dequeue());
+}
+
+// 2. Test the code in (1).
+
+var names = ["John", "Jack", "Camila", "Ingrid", "Carl"];
+hotPotato(names, 7);
+
+
+
+//------------------------//
+// JavaScript task queues //
+//------------------------//
+console.log("JavaScript task queues");
+
+// Skip.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two queues as input and concatenates them
+//    into a new queue (which should be returned).
+
+function concatenate(queue1, queue2) {
+  // implementation
+  var newQueue = new Queue();
+  // while the queue is not empty
+  //while (queue1.size() > 0) {
+  while (!queue1.isEmpty()) {
+    // dequeue an element
+    var item = queue1.dequeue();
+    // enqueue the element into the new queue
+    newQueue.enqueue(item);
+  }
+  while (!queue2.isEmpty()) {
+    // dequeue an element
+    var item = queue2.dequeue();
+    // enqueue the element into the new queue
+    newQueue.enqueue(item);
+  }
+  return newQueue;
+}
+
+var q1 = new Queue();
+q1.enqueue(1);
+q1.enqueue(2);
+q1.enqueue(3);
+var q2 = new Queue();
+q2.enqueue(4);
+q2.enqueue(5);
+q2.enqueue(6);
+var qn = concatenate(q1, q2);
+qn.print();
+
+// 2. Write a function that takes two queues as input and returns true if they
+//    have the same elements, and false otherwise. Test your code.
+
+function isEqual(queue1, queue2) {
+  if (queue1.size() !== queue2.size()) {
+    return false;
+  }
+  while (!queue1.isEmpty()) {
+    if (queue1.dequeue() !== queue2.dequeue()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

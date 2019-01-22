@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 8 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------//
+// Dictionaries //
+//--------------//
+console.log("Dictionaries");
+
+// 1. Implement the dictionary data structure using the prototype (as opposed
+//    to the version we wrote in class).
+
+function Dictionary() {
+  // store all elements in the items object
+  this.items = {};
+}
+
+Dictionary.prototype.set = function(key, value) {
+  // add a new key-value pair to the dictionary
+  this.items[key] = value;
+};
+
+Dictionary.prototype.delete = function(key) {
+  // delete a key-value pair
+  if (this.has(key)) {
+    delete this.items[key];
+    return true;
+  }
+  return false;
+};
+
+Dictionary.prototype.has = function(key) {
+  // return true if key is in the dictionary, false otherwise
+  return key in this.items;
+};
+
+Dictionary.prototype.get = function(key) {
+  // return the value that matches key
+  return this.has(key) ? this.items[key] : undefined;
+};
+
+Dictionary.prototype.clear = function() {
+  // remove all key-value pairs
+  this.items = {};
+};
+
+Dictionary.prototype.size = function() {
+  // return the number of key-value pairs
+  return Object.keys(this.items).length;
+};
+
+Dictionary.prototype.keys = function() {
+  // return an array of all the keys
+  return Object.keys(this.items);
+};
+
+Dictionary.prototype.values = function() {
+  // return an array of all the values
+  var values = [];
+  for (var k in this.items) {
+    if (this.has(k)) {
+      values.push(this.items[k]);
+    }
+  }
+  return values;
+};
+
+Dictionary.prototype.getItems = function() {
+  return this.items;
+};
+
+Dictionary.prototype.print = function() {
+  console.log(this.items);
+};
+
+// 2. Run some tests that show that your code works.
+
+var dictionary = new Dictionary();
+dictionary.set("Gandalf", "gandalf@email.com");
+dictionary.set("John", "johnsnow@email.com");
+dictionary.set("Tyrion", "tyrion@email.com");
+console.log(dictionary.has("Gandalf") === true);
+console.log(dictionary.size() === 3);
+console.log(dictionary.keys());
+console.log(dictionary.values());
+console.log(dictionary.get("Tyrion") === "tyrion@email.com");
+dictionary.delete("John");
+console.log(dictionary.keys());
+console.log(dictionary.values());
+console.log(dictionary.getItems());
+
+
+
+//----------------//
+// The hash table //
+//----------------//
+console.log("The hash table");
+
+// 1. Implement the hash table data structure using the prototype (as opposed
+//    to the version we wrote in class). Use separate chaining to resolve
+//    collisions and the djb2 hash function for hashing.
+
+function HashTable() {
+  // store all elements in the table array
+  this.table = [];
+}
+
+// define hash function
+HashTable.prototype.djb2HashCode = function(key) {
+  var hash = 5381;
+  for (var i = 0; i < key.length; i++) {
+    hash = hash * 33 + key.charCodeAt(i);
+  }
+  return hash;
+};
+
+HashTable.prototype.put = function(key, value) {
+  // add or update a new item
+  // NOTE: the method in the book has a problem
+  var position = this.djb2HashCode(key);
+  console.log(position + " - " + key);
+  if (this.table[position] === undefined) {
+    this.table[position] = new LinkedList();
+  }
+  this.table[position].append(new ValuePair(key, value));
+};
+
+HashTable.prototype.remove = function(key) {
+  // remove an item
+  var position = this.djb2HashCode(key);
+  if (this.table[position] !== undefined) {
+    var current = this.table[position].getHead();
+    while (current.next) {
+      if (current.element.key === key) {
+        this.table[position].remove(current.element);
+        if (this.table[position].isEmpty()) {
+          this.table[position] = undefined;
+        }
+        return true;
+      }
+      current = current.next;
+    }
+    if (current.element.key === key) {
+      this.table[position].remove(current.element);
+      if (this.table[position].isEmpty()) {
+        this.table[position] = undefined;
+      }
+      return true;
+    }
+  }
+  return false;
+};
+
+HashTable.prototype.get = function(key) {
+  // return the value that matches key
+  var position = this.djb2HashCode(key);
+  if (this.table[position] !== undefined) {
+    var current = this.table[position].getHead();
+    while (current.next) {
+      if (current.element.key === key) {
+        return current.element.value;
+      }
+      current = current.next;
+    }
+    if (current.element.key === key) {
+      return current.element.value;
+    }
+  }
+  return undefined;
+};
+
+HashTable.prototype.print = function() {
+  // print the content of the hash table
+  for (var i = 0; i < this.table.length; i++) {
+    if (this.table[i] !== undefined) {
+      console.log(i + ": " + this.table[i]);
+    }
+  }
+};
+
+// The linked list code.
+
+function ValuePair(key, value) {
+  this.key = key;
+  this.value = value;
+  this.toString = function() {
+    return "[" + this.key + " - " + this.value + "]";
+  };
+};
+
+//-----------------------------------------------------------------------------
+function Node(element) {
+  this.element = element;
+  this.next = null;
+}
+
+function LinkedList() {
+  this.length = 0;
+  this.head = null;
+}
+
+LinkedList.prototype.append = function(element) {
+  var node = new Node(element);
+  if (this.head === null) {
+    this.head = node;
+  }
+  else {
+    var tmp = this.head;
+    while (tmp.next !== null) {
+      tmp = tmp.next;
+    }
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.insert = function(position, element) {
+  var node = new Node(element);
+  if (position === 0) {
+    var oldHead = this.head;
+    this.head = node;
+    this.head.next = oldHead;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    node.next = tmp.next;
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.removeAt = function(position) {
+  var element = null;
+  if (position === 0) {
+    element = this.head.element;
+    this.head = this.head.next;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    element = tmp.next.element;
+    var prev = tmp;
+    var middle = tmp.next;
+    var next = middle.next;
+    prev.next = next;
+  }
+  this.length--;
+  return element;
+};
+
+LinkedList.prototype.remove = function(element) {
+  var position = this.indexOf(element);
+  return this.removeAt(position);
+};
+
+LinkedList.prototype.indexOf = function(element) {
+  var tmp = this.head;
+  for (var i = 0; i < this.length; i++) {
+    if (tmp.element === element) {
+      return i;
+    }
+    tmp = tmp.next;
+  }
+  return -1;
+};
+
+LinkedList.prototype.isEmpty = function() {
+  return this.length === 0;
+};
+
+LinkedList.prototype.size = function() {
+  var length = 0;
+  var tmp = this.head;
+  while (tmp !== null) {
+    length++;
+    tmp = tmp.next;
+  }
+  return length;
+};
+
+LinkedList.prototype.getHead = function() {
+  return this.head;
+}
+
+LinkedList.prototype.toString = function() {
+  var current = this.head;
+  var string = "List: ";
+  while (current) {
+    string += current.element + (current.next ? " -> " : "");
+    current = current.next;
+  }
+  return string;
+};
+
+LinkedList.prototype.print = function() {
+  console.log(this.toString());
+};
+
+// 2. Run some tests that show that your code works.
+
+var hash = new HashTable();
+hash.put("Gandalf", "gandalf@email.com");
+hash.put("John", "johnsnow@email.com");
+hash.put("Tyrion", "tyrion@email.com");
+console.log(hash.get("Gandalf"));
+console.log(hash.get("Loiane"));
+hash.remove("Gandalf");
+console.log(hash.get("Gandalf"));
+
+hash.put("ab", "ab");
+hash.put("ba", "ba");
+console.log(hash.get("ab"));
+console.log(hash.get("ba"));
+
+// 3. The book discusses linear probing but their approach has a serious
+//    problem. What is the issue?
+//    HINT: The issue can occur when there is a hash collision (two values
+//          mapped to the same index) in combination with a delete operation.
+
+// The delete operator is implemented incorrectly when there are hash
+// collisions. After deleting one item it could appear as if other items have
+// been deleted as well, even when that is not the case.
+
+
+
+//-------------------//
+// The ES6 Map class //
+//-------------------//
+console.log("The ES6 Map class");
+
+// Skip.
+
+
+
+//-------------------------------------//
+// The ES6 WeakMap and WeakSet classes //
+//-------------------------------------//
+console.log("The ES6 WeakMap and WeakSet classes");
+
+// Skip.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Complete the method below that adds all key-value pairs from one
+//    dictionary into another. See also the example below.
+
+Dictionary.prototype.merge = function(dict) {
+  // add all key-value pairs in 'dict' to 'this'
+  var keys = dict.keys();
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = dict.get(key);
+    this.set(key, val);
+  }
+};
+
+// Test your code by uncommenting these lines:
+var dict1 = new Dictionary();
+dict1.set("key1", "val1");
+dict1.set("key2", "val2");
+dict1.set("key3", "val3");
+var dict2 = new Dictionary();
+dict2.set("key3", "val3b");
+dict2.set("key4", "val4");
+dict1.merge(dict2);
+dict1.print(); // should contain key1-val1, key2-val2, key3-val3b, key4-val4
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 10 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//-------------------//
+// Graph terminology //
+//-------------------//
+console.log("Graph terminology");
+
+// Skip.
+
+
+
+//----------------------//
+// Representing a graph //
+//----------------------//
+console.log("Representing a graph");
+
+// Skip.
+
+
+
+//--------------------------//
+// Creating the Graph class //
+//--------------------------//
+console.log("Creating the Graph class");
+
+// 1. Implement the Graph class.
+function Queue() {
+  // properties and methods go here
+  var items = [];
+
+  this.enqueue = function(element) {
+    items.push(element);
+  };
+
+  this.dequeue = function() {
+    return items.shift();
+  };
+
+  this.front = function() {
+    return items[0];
+  };
+
+  this.isEmpty = function() {
+    return items.length === 0;
+  };
+
+  this.size = function() {
+    return items.length;
+  };
+
+  this.print = function() {
+    return console.log(items.toString());
+  };
+}
+function Dictionary() {
+  // store all elements in the items object
+  var items = {};
+
+  this.set = function(key, value) {
+    items[key] = value;
+  };
+
+  this.delete = function(key) {
+    if (this.has(key)){
+      delete items[key];
+      return true;
+    }
+    return false;
+  };
+
+  this.has = function(key) {
+    return key in items;
+  };
+
+  this.get = function(key) {
+    return this.has(key) ? items[key] : undefined;
+  };
+
+  this.clear = function() {
+    items = [];
+  };
+
+  this.size = function() {
+    return items.length;
+  };
+
+  this.keys = function() {
+    return Object.keys(items);
+  };
+
+  this.values = function() {
+    var values = [];  for (var k in items) {
+      if (this.has(k)) {
+        values.push(items[k]);
+      }
+    }
+    return values;
+  };
+
+  this.getItems = function() {
+    return items;
+  };
+}
+function Graph() {
+  var vertices = []; //{1}
+  var adjList = new Dictionary(); //{2}
+
+this.addVertex = function(v){
+  vertices.push(v); //{3}
+  adjList.set(v, []); //{4}
+};
+this.addEdge = function(v, w){
+  adjList.get(v).push(w); //{5}
+  adjList.get(w).push(v); //{6}
+};
+this.toString = function(){
+  var s = '';
+  for (var i=0; i<vertices.length; i++){ //{10}
+    s += vertices[i] + ' -> ';
+    var neighbors = adjList.get(vertices[i]); //{11}
+    for (var j=0; j<neighbors.length; j++){ //{12}
+      s += neighbors[j] + ' ';
+    }
+    s += '\n'; //{13}
+  }
+  return s;
+};
+var initializeColor = function(){
+ var color = [];
+ for (var i=0; i<vertices.length; i++){
+ color[vertices[i]] = 'white'; //{1}
+ }
+ return color;
+};
+this.bfs = function(v, callback){
+ var color = initializeColor(), //{2}
+ queue = new Queue(); //{3}
+ queue.enqueue(v); //{4}
+ while (!queue.isEmpty()){ //{5}
+ var u = queue.dequeue(), //{6}
+ neighbors = adjList.get(u); //{7}
+ color[u] = 'grey'; //{8}
+ for (var i=0; i<neighbors.length; i++){ //{9}
+ var w = neighbors[i]; //{10}
+ if (color[w] === 'white'){ //{11}
+ color[w] = 'grey'; //{12}
+ queue.enqueue(w); //{13}
+ }
+ }
+ color[u] = 'black'; //{14}
+ if (callback) { //{15}
+ callback(u);
+ }
+ }
+};
+var time = 0; //{1}
+this.DFS = function(){
+ var color = initializeColor(), //{2}
+ d = [],
+ f = [],
+ p = [];
+ time = 0;
+ for (var i=0; i<vertices.length; i++){ //{3}
+ f[vertices[i]] = 0;
+ d[vertices[i]] = 0;
+ p[vertices[i]] = null;
+ }
+ for (i=0; i<vertices.length; i++){
+ if (color[vertices[i]] === 'white'){
+ DFSVisit(vertices[i], color, d, f, p);
+ }
+ }
+ return { //{4}
+ discovery: d,
+ finished: f,
+ predecessors: p
+ };
+};
+var DFSVisit = function(u, color, d, f, p){
+ console.log('discovered ' + u);
+ color[u] = 'grey';
+ d[u] = ++time; //{5}
+ var neighbors = adjList.get(u);
+ for (var i=0; i<neighbors.length; i++){
+var w = neighbors[i];
+if (color[w] === 'white'){
+p[w] = u; //{6}
+DFSVisit(w,color, d, f, p);
+}
+}
+color[u] = 'black';
+f[u] = ++time; //{7}
+console.log('explored ' + u);
+};
+}
+// 2. Test the Graph class with the example from the book.
+
+var graph = new Graph();
+var myVertices = ['A','B','C','D','E','F','G','H','I']; //{7}
+for (var i=0; i<myVertices.length; i++){ //{8}
+  graph.addVertex(myVertices[i]);
+}
+graph.addEdge('A', 'B'); //{9}
+graph.addEdge('A', 'C');
+graph.addEdge('A', 'D');
+graph.addEdge('C', 'D');
+graph.addEdge('C', 'G');
+graph.addEdge('D', 'G');
+graph.addEdge('D', 'H');
+graph.addEdge('B', 'E');
+graph.addEdge('B', 'F');
+graph.addEdge('E', 'I');
+console.log(graph.toString());
+
+//------------------//
+// Graph traversals //
+//------------------//
+console.log("Graph traversals");
+
+// 1. Implement breadth-first search.
+function printNode(value){ //{16}
+ console.log('Visited vertex: ' + value); //{17}
+}
+graph.bfs(myVertices[0], printNode); //{18}
+// 2. Implement depth-first search.
+
+graph = new Graph();
+myVertices = ['A','B','C','D','E','F'];
+for (i=0; i<myVertices.length; i++){
+ graph.addVertex(myVertices[i]);
+}
+graph.addEdge('A', 'C');
+graph.addEdge('A', 'D');
+graph.addEdge('B', 'D');
+graph.addEdge('B', 'E');
+graph.addEdge('C', 'F');
+graph.addEdge('F', 'E');
+var result = graph.DFS();
+
+//--------------------------//
+// Shortest path algorithms //
+//--------------------------//
+console.log("Shortest path algorithms");
+
+// 1. Implement Dijkstra's algorithm.
+
+var graph = [[0, 2, 4, 0, 0, 0],
+             [0, 0, 1, 4, 2, 0],
+             [0, 0, 0, 0, 3, 0],
+             [0, 0, 0, 0, 0, 2],
+             [0, 0, 0, 3, 0, 2],
+             [0, 0, 0, 0, 0, 0]];
+
+function dijkstra(graph, src){
+ var dist = [], visited = [],
+ length = this.graph.length;
+ for (var i = 0; i < length; i++) { //{1}
+ dist[i] = Infinity;
+ visited[i] = false;
+ }
+ dist[src] = 0; //{2}
+  for (var i = 0; i < length-1; i++){ //{3}
+  var u = minDistance(dist, visited); //{4}
+  visited[u] = true; //{5}
+  for (var v = 0; v < length; v++){
+  if (!visited[v] &&
+  this.graph[u][v]!=0 && dist[u] != Infinity &&
+  dist[u]+this.graph[u][v] < dist[v]){ //{6}
+  dist[v] = dist[u] + this.graph[u][v]; //{7}
+  }
+  }
+  }
+  return dist; //{8}
+ };
+ var minDistance = function(dist, visited){
+  var min = Infinity, minIndex = -1;
+  for (var v = 0; v < dist.length; v++){
+  if (visited[v] == false && dist[v] <= min){
+  min = dist[v];
+  minIndex = v;
+  }
+  }
+  return minIndex;
+ };
+// 2. Test your implementation of Dijkstra's algorithm.
+
+var distances = dijkstra(graph, 0);
+console.log(distances);
+
+//-----------------------------//
+// Minimum spanning tree (MST) //
+//-----------------------------//
+console.log("Minimum spanning tree (MST)");
+
+// Skip for now (see homework).
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two graphs as input and returns true if
+//    they have the same nodes and edges, and false otherwise. Test your code.
+
+function isEqual(graph1, graph2) {
+  var arr1 = [];
+  function addToArray1(key) {
+    arr1.push(key);
+  }
+  graph1.dfs(addToArray1);
+  var arr2 = [];
+  function addToArray2(key) {
+    arr2.push(key);
+  }
+  graph2.dfs(addToArray2);
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  for (var i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+console.log(isEqual(graph, graph) === true);
+
+var graph2 = new BinarySearchTree();
+graph2.insert(11);
+graph2.insert(7);
+graph2.insert(15);
+graph2.insert(5);
+graph2.insert(3);
+graph2.insert(9);
+graph2.insert(8);
+graph2.insert(10);
+graph2.insert(13);
+graph2.insert(12);
+graph2.insert(14);
+graph2.insert(20);
+graph2.insert(18);
+graph2.insert(25);
+graph2.insert(50);
+
+console.log(isEqual(graph1, graph2) === false);
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

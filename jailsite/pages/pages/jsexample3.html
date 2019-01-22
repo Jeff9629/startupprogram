@@ -1,0 +1,47 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title> Java Script - HTML script</title>
+</head>
+<body>
+  <script lang="JavaScript">
+  //function from stack overflow
+  function colorLog(message, color) {
+
+    color = color || "black";
+
+    switch (color) {
+        case "success":
+             color = "Green";
+             break;
+        case "info":
+                color = "DodgerBlue";
+             break;
+        case "error":
+             color = "Red";
+             break;
+        case "warning":
+             color = "Orange";
+             break;
+        default:
+             color = color;
+    }
+
+    console.log("%c" + message, "color:" + color);
+}
+//write to document
+  document.write("Hello from Java Script");
+  document.write("<br />Hello again!");
+  document.write("<br /> <font color='RED'><p> \
+    When writing to a document you use HTML. \
+    </p></font>");
+  var nme = prompt("Enter your name: ", "Fred");  
+  alert(nme);
+//write to console
+  console.log('%s', "Hello from Java Script");
+  console.log('\nHello Again');
+  console.log('\nYou do not need to use hrml when writing to the console!')
+  colorLog("This is an example use of a function I found on stack overflow!", "info");
+  </script>
+</body>
+</html>

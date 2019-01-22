@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 2 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You can enter both code and explanations. For an explanation, start
+//       the line with '//' which indicates a comment.
+
+// NOTE: console.log prints text to the browser console that you can enable
+//       to see the output. It is a little bit more convenient than alert so
+//       we will use it most of the time.
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//---------------------------//
+// Why should we use arrays? //
+//---------------------------//
+console.log("Why should we use arrays?");
+
+// 1. Check the weather forecast for the next 5 days and store the expected
+//    temperature for each day in a separate variable. Calculate the average
+//    temperature and print it to the console.
+
+var t1 = 92;
+var t2 = 87;
+var t3 = 80;
+var t4 = 71;
+var t5 = 69;
+var avg = (t1,t2,t3,t4,t5) / 5;
+console.log("The average temperature is:" + avg);
+// 2. Solve the same problem as in (1) but store the temperatures in an array.
+var temps = [92,87,80,71,69];
+var sum = 0;
+for (var i = 0; i <= sum; i++) {
+  average = temps.sum / 5;
+  console.log(average);
+}
+// 3. Suppose you want to look at the forecast for the next 10 days instead of
+//    5 days. Is the code for solution (1) or (2) easier to update?
+
+
+
+//----------------------------------//
+// Creating and initializing arrays //
+//----------------------------------//
+console.log("Creating and initializing arrays");
+
+// Use this code to answer the questions below.
+var daysOfWeek1 = new Array();
+var daysOfWeek2 = new Array(7);
+var daysOfWeek3 = new Array("Sunday", "Monday", "Tuesday", "Wednesday",
+                            "Thursday", "Friday", "Saturday");
+var daysOfWeek4 = [];
+var daysOfWeek5 = ["Sunday", "Monday", "Tuesday", "Wednesday",
+                   "Thursday", "Friday", "Saturday"];
+
+// 1. Get the length for each array and print it to the console.
+console.log(daysOfWeek1.length);
+console.log(daysOfWeek2.length);
+console.log(daysOfWeek3.length);
+console.log(daysOfWeek4.length);
+console.log(daysOfWeek5.length);
+// 2. Is is possible to create an array with just the number 7 in it?
+//    How about 7 and 8?
+console.log("It is not possible since an array's purpose is to group multiple values. However, once I add 8, it goes to two because those are two seperate values.");
+var num = [7,8];
+console.log(num.length);
+// 3. Which notation do you prefer: new Array() or []?
+console.log("I prefer using [], since i dont have to specify 'new array' each time I make a new array.");
+// 4. The fibonacci sequence is defined as 0, 1, 1, 2, 3, 5, 8, 13, 21, ...
+//    Create an array with the first 25 elements of this sequence.
+//    For more info see https://en.wikipedia.org/wiki/Fibonacci_number
+var sequence = [0, 1];
+
+for (var i = 2; i < 25; i++) {
+  sequence[i] = sequence[i-2] + sequence[i-1];
+}
+console.log(sequence);
+
+var fib = [	0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368]
+console.log("The array I made for the Fibonacci Sequence consists of " + fib.length + " numbers.");
+
+//-----------------//
+// Adding elements //
+//-----------------//
+console.log("Adding elements");
+
+// Use this array to answer the questions below.
+var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// 1. Add 10 to the end of the array.
+arr.push(10)
+// 2. Add 0 to the beginning of the array.
+arr.unshift(0)
+// 3. What is the new length of the array? Guess before checking it.
+console.log("The modified array's length is " + arr.length + ". I originally guessed 11.");
+
+
+//-------------------//
+// Removing elements //
+//-------------------//
+console.log("Removing elements");
+
+// Use the array from the 'Adding elements' section.
+
+// 1. Remove 10 from the end of the array.
+arr.splice(10,1);
+console.log(arr);
+// 2. Remove 0 from the beginning of the array.
+arr.splice(0,1);
+
+console.log(arr);
+//-------------------------------------------------------//
+// Adding and removing elements from a specific position //
+//-------------------------------------------------------//
+console.log("Adding and removing elements from a specific position");
+
+// Use the array from the 'Adding elements' section.
+
+// 1. Remove all elements except the first and last.
+arr.splice(1, arr.length-2);
+console.log(arr);
+// 2. Insert the numbers that were just removed back into the array.
+for (var i = 0; i < 7; i++) {
+  arr.splice(i+1, 0, i+2);
+}
+console.log(arr);
+// NOTE: arr should be back to its original state at this point.
+
+
+
+//---------------------------------------------//
+// Two-dimensional and multidimensional arrays //
+//---------------------------------------------//
+console.log("Two-dimensional and multidimensional arrays");
+
+// 1. Sum all the elements in the two-dimensional array below. Print the
+//    result to the console.
+
+var arr = [[1, 2, 3],
+           [4, 5, 6],
+           [7, 8, 9]];
+
+var total = 0;
+for (var i = 0; i < arr.length; i++) {
+  var arri = arr[i];
+  console.log(arri);
+  for (var j = 0; j < arri.length; j++) {
+  console.log(arri[j]);
+  total = total += arr[i][j];
+  }
+}
+console.log("The total is " + total);
+//-----------------------------------------//
+// References for JavaScript array methods //
+//-----------------------------------------//
+console.log("References for JavaScript array methods");
+
+// Use the following two arrays to answer the next questions.
+
+var zero = 0;
+var positiveNumbers = [1, 2, 3];
+var negativeNumbers = [-3, -2, -1];
+
+// 1. Create a new array 'numbers' that contains all numbers above in order.
+
+var numbers = negativeNumbers.concat(zero, positiveNumbers);
+console.log(numbers);
+
+// 2. Check if every number in the numbers array is less than 10 and print
+//    the result to the console.
+var isLessThanTen = true;
+for (var i = 0; i < numbers.length; i++) {
+  if (numbers[i] >= 10) {
+    isLessThanTen = false;
+  }
+}
+console.log("isLessThanTen: " + isLessThanTen);
+// 3. Select all the nonnegative numbers from the numbers array and store them
+//    in a new array. Print the array to the console.
+var result = numbers.filter(function(x) {
+  return x > 0;
+});
+console.log(result)
+// 4. Create a new array that contains all the numbers but then squared.
+var result = numbers.map(function(x) {
+  return x*x;
+});
+console.log(result)
+// Only read ECMAScript sections.
+
+
+
+//----------------------//
+// The TypedArray class //
+//----------------------//
+console.log("The TypedArray class");
+
+// 1. Do some research to find out what the difference is between an Int8Array,
+//    Uint8Array, and an Int16Array. Why would you use these arrays?
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that selects all elements from an array that are greater
+//    than n (this means n is a parameter for the function). Before you write
+//    the implementation of the function, first create some tests that will
+//    eventually show that your function works correctly.
+var n = 1;
+var result = numbers.filter(function(x) {
+  return x > n;
+});
+console.log(result);
+
+function getGreaterThanN(arr, n) {
+  return arr.filter(function(x) {
+    x > n;
+  });
+}
+console.log(getGreaterThanN([1,2,3,4], 2));
+// 2. Write a function that checks if an array contains two numbers that sum
+//    to 5. Before you write the implementation of the function, first create
+//    some tests that will eventually show that your function works correctly.
+
+
+
+</script>
+</head>
+<body>
+  Take A Look At That Console!
+</body>
+</html>

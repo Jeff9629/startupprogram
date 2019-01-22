@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Rainbow Problem</title>
+</head>
+<body>
+<p>
+  Congrats for knowing your colors.
+  <a href="programhome.html">Click here to return home.</a>
+</p>
+<script lang = "JavaScript">
+//
+//
+var response = "your choice was the color: ";
+var prmt = "Enter a color in the rainbow: ";
+var ans;
+var reply = " ";
+//
+//valid rainbow colors are:
+// red, orange, yellow, green, blue, indigo, violet
+//
+// modify this program to check for the missing colors.
+//
+
+     ans = prompt(prmt, "red");
+     if( ans === "red")
+       { response += "red" ;}
+      else if( ans === "orange")
+        { response += "orange"}
+        else if( ans === "yellow")
+          { response += "yellow"}
+          else if( ans === "green")
+            { response += "green"}
+            else if( ans === "blue")
+              { response += "blue"}
+              else if( ans === "indigo")
+                { response += "indigo"}
+                else if( ans === "violet")
+                  { response += "violet"}
+      else {
+        response = ans + " is not a valid rainbow color!";
+      }
+      alert (response);
+  </script>
+</body>
+</html>

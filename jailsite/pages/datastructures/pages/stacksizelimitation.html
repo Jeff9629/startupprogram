@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 11 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+var i = 0;
+function recursiveFn () {
+ i++;
+ recursiveFn();
+}
+try {
+ recursiveFn();
+} catch (ex) {
+ alert('i = ' + i + ' error: ' + ex);
+}
+</script>
+</head>
+<body>
+  Take A Look At That Console!
+</body>
+</html>

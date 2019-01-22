@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 3 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------//
+// The stack data structure //
+//--------------------------//
+console.log("The stack data structure");
+
+// 1. Implement the stack data structure described in the book. Instead of
+//    using 'let items = [];' use 'var items = []'. Note that this
+//    implementation does not use the prototype (see homework).
+
+function Stack() {
+  // property
+  var items = [];
+
+  // methods
+  this.push = function(element) {
+    items.push(element);
+  };
+
+  this.pop = function() {
+    return items.pop();
+  };
+
+  this.peek = function() {
+    return items[items.length-1];
+  };
+
+  this.isEmpty = function() {
+    return items.length === 0;
+    //return this.size() === 0;
+  };
+
+  this.size = function() {
+    return items.length;
+  };
+
+  this.clear = function() {
+    items = [];
+  };
+
+  this.print = function() {
+    console.log(items.toString());
+  };
+}
+
+// 2. Write a simple test program that shows your stack works.
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.print();
+console.log("stack.size() === 3: " + (stack.size() === 3));
+console.log("stack.peek() === 3: " + (stack.peek() === 3));
+console.log("stack.pop() === 3: " + (stack.pop() === 3));
+console.log("stack.pop() === 2: " + (stack.pop() === 2));
+console.log("stack.pop() === 1: " + (stack.pop() === 1));
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+stack.push(1);
+stack.clear();
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+
+
+
+//----------------------------------//
+// ECMAScript 6 and the Stack class //
+//----------------------------------//
+console.log("ECMAScript 6 and the Stack class");
+
+// Skip.
+
+
+
+//-------------------------------//
+// Solving problems using stacks //
+//-------------------------------//
+console.log("Solving problems using stacks");
+
+// 1. Use the prompt to ask for a decimal number. Then write a loop that divides
+//    the number by two in every iteration and prints the remainder (0 or 1).
+//    For example, if the number is 5 the remainder is 1 and the number in the
+//    next iteration should be 2 (5/2 rounded down).
+
+var number = Number(prompt("Give me a number: "));
+
+var stack = new Stack();
+var result = "";
+while (number > 0) {
+  var remainder = number % 2;
+  console.log("Remainder: " + remainder);
+  result += remainder;
+  stack.push(remainder);
+  number = Math.floor(number / 2);
+  console.log("Number: " + number);
+}
+console.log(result);
+
+
+
+// 2. The algorithm in (1) can be used to convert a decimal number to a binary
+//    number but there is one issue. What is the problem?
+
+// The bits are in the wrong order.
+
+// 3. Solve the problem in (2) using a stack.
+
+var result = "";
+while (!stack.isEmpty()) {
+  result += stack.pop();
+}
+console.log(result);
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two stacks as input and returns true if they
+//    have the same elements, and false otherwise. Test your code.
+
+function isEqual(stack1, stack2) {
+  if (stack1.size() !== stack2.size()) {
+    return false;
+  }
+  while (!stack1.isEmpty()) {
+    if (stack1.pop() !== stack2.pop()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+var stack1 = new Stack();
+var stack2 = new Stack();
+stack1.push(1);
+stack1.push(2);
+stack1.push(3);
+stack2.push(1);
+stack2.push(2);
+stack2.push(4);
+console.log(isEqual(stack1, stack2) === true);
+// this next one is true because both stacks are empty
+console.log(isEqual(stack1, stack2) === true);
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

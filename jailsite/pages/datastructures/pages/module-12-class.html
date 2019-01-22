@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 12 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//-----------//
+// Recursion //
+//-----------//
+console.log("Recursion");
+
+// 1. Implement fibonnacci using a recursive function and test your code.
+
+function fibonacci(num){
+ if (num === 1 || num === 2){
+   return 1;
+ }
+ return fibonacci(num - 1) + fibonacci(num - 2);
+}
+
+console.log(fibonacci(4) === 3);
+console.log(fibonacci(5) === 5);
+console.log(fibonacci(6) === 8);
+
+//---------------------//
+// Dynamic programming //
+//---------------------//
+console.log("Dynamic programming");
+
+// 1. Implement the minimum coin change problem using dynamic programming.
+//    Test your code.
+
+function MinCoinChange(coins){
+ var coins = coins;
+ var cache = {};
+this.makeChange = function(amount) {
+ var me = this;
+ if (!amount) {
+  return [];
+ }
+ if (cache[amount]) {
+  return cache[amount];
+}
+var min = [], newMin, newAmount;
+for (var i=0; i<coins.length; i++){
+  var coin = coins[i];
+  newAmount = amount - coin;
+  if (newAmount >= 0){
+    newMin = me.makeChange(newAmount);
+  }
+  if (
+    newAmount >= 0 &&
+    (newMin.length < min.length-1 || !min.length)
+    && (newMin.length || !newAmount))
+    {
+      min = [coin].concat(newMin);
+      console.log('new Min ' + min + ' for ' + amount);
+    }
+    }
+    return (cache[amount] = min);
+  };
+}
+
+var minCoinChange = new MinCoinChange([1, 5, 10, 25]);
+console.log(minCoinChange.makeChange(36));
+//-------------------//
+// Greedy algorithms //
+//-------------------//
+console.log("Greedy algorithms");
+
+// 1. Implement the minimum coin change problem using a greedy algorithm.
+//    Test your code.
+
+function MinCoinChange(coins){
+   var coins = coins;
+   this.makeChange = function(amount) {
+   var change = [],
+  total = 0;
+  for (var i=coins.length; i>=0; i--){
+    var coin = coins[i];
+    while (total + coin <= amount) {
+      change.push(coin);
+      total += coin;
+    }
+  }
+  return change;
+ };
+}
+
+var minCoinChange2 = new MinCoinChange([1, 5, 10, 25]);
+console.log(minCoinChange2.makeChange(36));
+//----------------------------------------//
+// Introduction to functional programming //
+//----------------------------------------//
+console.log("Introduction to functional programming");
+
+// 1. Solve the problem of obtaining all the positive numbers in an array using
+//    imperative style.
+console.log("Imperative")
+var printArray = function(array){
+ for (var i = 0; i < array.length; i++){
+   console.log(array[i]);
+ }
+};
+printArray([1, 2, 3, 4, 5]);
+
+// 2. Solve the problem of obtaining all the positive numbers in an array using
+//    functional style.
+console.log("Functional")
+var forEach = function(array, action){
+ for (var i=0; i<array.length; i++){
+   action(array[i]);
+   }
+  };
+var logItem = function (item) {
+   console.log(item);
+  };
+forEach([1, 2, 3, 4, 5], logItem);
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Implement a function that returns the complete fibonacci sequence in an
+//    array for a given number.
+
+function fib(n){
+  let arr = [0, 1];
+  for (let i = 2; i < n + 1; i++){
+    arr.push(arr[i - 2] + arr[i -1])
+  }
+ return arr[n]
+}
+
+console.log(fib(67));
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

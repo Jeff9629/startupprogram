@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Lottery Examle</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="myfuncts.js"></script>
+  <script type="text/javascript">
+  function getPick(pick)
+  {
+    var tp = [];
+    var pb,mb;
+    var d1,d2,d3;
+
+    switch(pick)
+    {
+      case 'pb':
+        tp = getPicks(69, 6);
+        pb = Math.floor( Math.random()*(23) + 1 );
+        return (tp.join(',')+' pb: '+pb );
+      break;
+      case 'mm':
+        tp = getPicks(75,5);
+        mb = Math.floor( Math.random()*(15) + 1 );
+        return ( tp.join(',')+' mb: '+mb) ;
+      break;
+      case 'c5':
+        tp = getPicks(43, 5);
+        return (tp.join(',')) ;
+      break;
+      case 'dn':
+        d1 = Math.floor((Math.random() * (10) ) );
+        d2 = Math.floor((Math.random() * (10) ) );
+        d3 = Math.floor((Math.random() * (10) ) );
+        return ( ' '+d1+d2+d3) ;
+      break;
+      default:
+       alert('Error in getPick');
+       break;
+    }
+  }
+
+  $(document).ready(function ()
+  {
+    $('#results').css({backgroundColor: 'cyan'});
+    console && console.log("document ready!!");
+    $('#pb').on('click', function()
+       {
+         if( $('#pb').prop('checked'))
+         {
+           var Pb = getPick('pb');
+           var data = $('#results').html();
+           $('#results').html(  data + '<br> Power Ball: ' + Pb );
+         }
+       });
+       $('#mm').on('click', function()
+          {
+            if( $('#mm').prop('checked'))
+            {
+             var mm = getPick('mm');
+             var data = $('#results').html();
+             $('#results').html(  data + '<br> Mega Million: ' + mm );
+            }
+          });
+        $('#c5').on('click', function()
+          {
+            if( $('#c5').prop('checked'))
+            {
+              var c5 = getPick('c5');
+              var data = $('#results').html();
+              $('#results').html(  data + '<br> Cash Five: ' + c5);
+            }
+          });
+          $('#dn').on('click', function()
+            {
+              if( $('#dn').prop('checked'))
+              {
+                var dn = getPick('dn');
+                var data = $('#results').html();
+                $('#results').html(  data + '<br> Pick 3: ' + dn);
+              }
+            });
+  });
+
+
+
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Select Options for Lottery Numbers</h2>
+  <p>The form below contains four lottery game checkboxes:</p>
+
+  <form onsubmit="getFormData()">
+    <label class="checkbox-inline">
+      <input type="checkbox" value="pb" id= "pb">Power Ball
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" value="mm" id= "mm">Mega Million
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" value="c5" id = "c5" >Cash 5
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" value="dn" id = "dn">Pick 3
+    </label>
+    <button type = "clear" class = "btn btn-default" id='submit'>Clear</button>
+  </form>
+</div>
+<div id='results'>
+Lottery Results:
+</div>
+
+</body>
+</html>

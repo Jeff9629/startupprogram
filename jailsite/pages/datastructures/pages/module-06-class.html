@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 6 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//-----------------------//
+// Structuring a dataset //
+//-----------------------//
+console.log("Structuring a dataset");
+
+// Skip.
+
+
+
+//----------------//
+// Creating a set //
+//----------------//
+console.log("Creating a set");
+
+// 1. Finish the implemention of the set data structure below. Note that this
+//    implementation does not use the prototype (see homework).
+
+function Set() {
+  var items = {}; // note that this is an object instead of an array
+
+  this.add = function(value) {
+    if (!this.has(value)) {
+      items[value] = value;
+      return true;
+    }
+    return false;
+  };
+
+  this.delete = function(value) {
+    if (this.has(value)){
+      delete items[value];
+      return true;
+    }
+    return false;
+  };
+
+  this.has = function(value) {
+    return value in items;
+  };
+
+  this.clear = function() {
+    items = {};
+  };
+
+  this.size = function() {
+    return Object.keys(items).length;
+  };
+
+  this.values = function() {
+    let values = [];
+    for (let i=0, keys=Object.keys(items); i<keys.length; i++) {
+      values.push(items[keys[i]]);
+    }
+    return values;
+  };
+  this.union = function(otherSet) {
+    let unionSet = new Set();
+
+    let vales = this.values();
+    for (let i=0; i<values.length; i++) {
+      unionSet.add(values[i]);
+    }
+    return unionSet;
+  }
+  this.intersection = function(otherSet) {
+    let intersectionSet = new Set();
+
+    let vales = this.values();
+    for (let i=0; i<values.length; i++) {
+      if (otherSet.has(values[i])) {
+        intersectionSet.add(values[i]);
+      }
+    }
+    return intersectionSet;
+  }
+  this.difference = function(otherSet){
+    let differenceSet = new Set();
+
+    let values = this.values();
+    for (let i=0; i<values.length; i++) {
+      if (!otherSet.has(values[i])){
+        differenceSet.add(values[i]);
+      }
+    }
+    return differenceSet;
+  }
+  this.subset = function(otherSet){
+    if (this.size() > otherSet.size()) {
+      return false;
+    } else {
+      let values = this.values();
+      for (let i=0; i<values.length; i++) {
+        if (!otherSet.has(values[i])){
+          return false;
+        }
+      }
+     return true;
+   }
+  }
+}
+
+
+
+//----------------//
+// Set operations //
+//----------------//
+console.log("Set operations");
+
+// 1. Implement the union set function.
+
+
+
+// 2. Implement the intersection set function.
+
+
+
+// 3. Implement the set difference function.
+
+
+
+// 4. Implement the subset function.
+
+
+//---------------------//
+// ES6 – the Set class //
+//---------------------//
+console.log("ES6 – the Set class");
+
+// Skip.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two sets as input and returns true if
+//    they have the same elements, and false otherwise. Test your code.
+
+function isEqual(set1, set2) {
+  return set1.subset(subset2) && set2.subset(set1);
+}
+
+// 2. Create a new stack and push the numbers 1,2,3,4 and 5 on it.
+//    Create a new empty set. Pop all items off the stack and add
+//    them to the set. Test your program.
+
+function Stack() {
+  // property
+  var items = [];
+
+  // methods
+  this.push = function(element) {
+    items.push(element);
+  };
+
+  this.pop = function() {
+    return items.pop();
+  };
+
+  this.peek = function() {
+    return items[items.length-1];
+  };
+
+  this.isEmpty = function() {
+    return items.length === 0;
+    //return this.size() === 0;
+  };
+
+  this.size = function() {
+    return items.length;
+  };
+
+  this.clear = function() {
+    items = [];
+  };
+
+  this.print = function() {
+    console.log(items.toString());
+  };
+}
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.push(4);
+stack.push(5);
+stack.print();
+
+var set = new Set();
+while (!stack.isEmpty()){
+  var item = stack.pop;
+  set.add(item);
+}
+console.log(set.values());
+// 3. Push all items back into stack
+var values = set.values();
+for (i=0, i < values.length; i++) {
+  set.remove(values[i]);
+  stack.push(values[i]);
+}
+stack.print()
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

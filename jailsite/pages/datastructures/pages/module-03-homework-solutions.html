@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 3 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------//
+// The stack data structure //
+//--------------------------//
+console.log("The stack data structure");
+
+// 1. Implement the stack data structure using the prototype (as opposed to the
+//    version we wrote in class).
+
+function Stack() {
+  // property
+  this.items = [];
+}
+
+// methods
+Stack.prototype.push = function(element) {
+  this.items.push(element);
+};
+
+Stack.prototype.pop = function() {
+  return this.items.pop();
+};
+
+Stack.prototype.peek = function() {
+  return this.items[this.items.length-1];
+};
+
+Stack.prototype.isEmpty = function() {
+  return this.items.length === 0;
+  //return this.size() === 0;
+};
+
+Stack.prototype.size = function() {
+  return this.items.length;
+};
+
+Stack.prototype.clear = function() {
+  this.items = [];
+};
+
+Stack.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+// methods go here using Stack.prototype.
+
+// 2. Write a simple test program that shows your stack works.
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.print();
+console.log("stack.size() === 3: " + (stack.size() === 3));
+console.log("stack.peek() === 3: " + (stack.peek() === 3));
+console.log("stack.pop() === 3: " + (stack.pop() === 3));
+console.log("stack.pop() === 2: " + (stack.pop() === 2));
+console.log("stack.pop() === 1: " + (stack.pop() === 1));
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+stack.push(1);
+stack.clear();
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+
+// 3. Add a method to Stack that returns the largest value on the stack. Return
+//    null if there are no elements on the stack. Show that your method works.
+
+Stack.prototype.getMax = function() {
+  var maxItem = null;
+  for (var i = 0; i < this.items.length; i++) {
+    var item = this.items[i];
+    if (maxItem === null || item > maxItem) {
+      maxItem = item;
+    }
+  }
+  return maxItem;
+};
+
+stack.push(8);
+stack.push(13);
+stack.push(1);
+console.log(stack.getMax() === 13);
+
+
+
+//----------------------------------//
+// ECMAScript 6 and the Stack class //
+//----------------------------------//
+console.log("ECMAScript 6 and the Stack class");
+
+// Skip.
+
+
+
+//-------------------------------//
+// Solving problems using stacks //
+//-------------------------------//
+console.log("Solving problems using stacks");
+
+// See Project.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. It is possible to use a stack to check if the number of parentheses in a
+//    string is balanced, meaning there are as many opening parentheses as
+//    closing ones. In addition, we can also make sure that each opening
+//    parenthesis precedes a closing parenthesis. Implement this algorithm.
+//    HINT: When encountering '(' push to the stack and when encountering ')'
+//    pop from the stack.
+
+function isBalanced(str) {
+  var stack = new Stack();
+  for (var i = 0; i < str.length; i++) {
+    var chr = str[i];
+    if (chr === "(") {
+      // we encountered an opening parenthesis, so we push to the stack
+      stack.push(chr);
+    }
+    else if (chr === ")") {
+      // we encountered a closing parenthesis, so we pop from the stack
+      if (stack.isEmpty()) {
+        // this means we found a closing parenthesis without an opening one
+        return false;
+      }
+      stack.pop();
+    }
+  }
+  // we have to check to see there are no parentheses left on the stack
+  // if there are parentheses, it means they weren't closed
+  if (!stack.isEmpty()) {
+    return false;
+  }
+  return true;
+}
+
+// 2. Write a simple test program that shows your implementation works.
+
+console.log(isBalanced("()") === true);
+console.log(isBalanced("()") === true);
+console.log(isBalanced("(") === false);
+console.log(isBalanced(")") === false);
+console.log(isBalanced(")(") === false);
+console.log(isBalanced("(((())(())))") === true);
+console.log(isBalanced("(( a ) b ( c ))") === true);
+console.log(isBalanced("(( a ) (b ( c ))") === false);
+console.log(isBalanced("(( a ) b) ( c ))") === false);
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

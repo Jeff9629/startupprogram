@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 3 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------//
+// The stack data structure //
+//--------------------------//
+console.log("The stack data structure");
+
+// 1. Implement the stack data structure using the prototype (as opposed to the
+//    version we wrote in class).
+
+function Stack() {
+  this.items = [];
+  this.items.length = 0;
+}
+
+Stack.prototype.push = function(element) {
+  this.items.push(element);
+};
+
+Stack.prototype.pop = function() {
+  return this.items.pop();
+};
+
+Stack.prototype.peek = function() {
+  return this.items[this.items.length-1];
+};
+
+Stack.prototype.isEmpty = function() {
+  return this.items.length === 0;
+};
+
+Stack.prototype.size = function() {
+  return this.items.length;
+};
+
+Stack.prototype.clear = function() {
+  this.items = [];
+};
+
+Stack.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+// methods go here using Stack.prototype.
+
+// 2. Write a simple test program that shows your stack works.
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+stack.print();
+console.log("stack.size() === 3: " + (stack.size() === 3));
+console.log("stack.peek() === 3: " + (stack.peek() === 3));
+console.log("stack.pop() === 3: " + (stack.pop() === 3));
+console.log("stack.pop() === 2: " + (stack.pop() === 2));
+console.log("stack.pop() === 1: " + (stack.pop() === 1));
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+stack.push(1);
+stack.clear();
+console.log("stack.size() === 0: " + (stack.size() === 0));
+console.log("stack.isEmpty() === true: " + (stack.isEmpty() === true));
+
+// 3. Add a method to Stack that returns the largest value on the stack. Return
+//    null if there are no elements on the stack. Show that your method works.
+
+Stack.prototype.getMax = function () {
+  if (this.items.length === 0){
+    return null;
+  } else {
+      return this.items[this.items.length - 1];
+    }
+  }
+
+  stack.push(1);
+  stack.push(2);
+  stack.push(3);
+  console.log(stack.getMax() === 3);
+
+//----------------------------------//
+// ECMAScript 6 and the Stack class //
+//----------------------------------//
+console.log("ECMAScript 6 and the Stack class");
+
+// Skip.
+
+
+
+//-------------------------------//
+// Solving problems using stacks //
+//-------------------------------//
+console.log("Solving problems using stacks");
+
+// See Project.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. It is possible to use a stack to check if the number of parentheses in a
+//    string is balanced, meaning there are as many opening parentheses as
+//    closing ones. In addition, we can also make sure that each opening
+//    parenthesis precedes a closing parenthesis. Implement this algorithm.
+//    HINT: When encountering '(' push to the stack and when encountering ')'
+//    pop from the stack.
+
+function isBalanced(s)
+{
+  var parentheses = "[]{}()",
+    stack = [],
+    i,
+    c;
+
+  for (i = 0; c = s[i++];)
+  {
+    var bracePosition = parentheses.indexOf(c),
+      braceType;
+    if (!~bracePosition)
+      continue;
+
+    braceType = bracePosition % 2 ? 'closed' : 'open';
+
+    if (braceType === 'closed')
+    {
+      if (!stack.length || parentheses.indexOf(stack.pop()) != bracePosition - 1)
+        return false;
+    }
+    else
+    {
+      stack.push(c);
+    }
+  }
+  return !stack.length;
+}
+
+// 2. Write a simple test program that shows your implementation works.
+
+console.log('{}([]) true', isBalanced('{}([])'));
+console.log('{{ false', isBalanced('{{'));
+console.log('[(]) false', isBalanced('[(])'));
+console.log("{}([]) true", isBalanced("{}([])"));
+console.log("([}]) false", isBalanced("([}])"));
+console.log("([]) true", isBalanced("([])"));
+console.log("()[]{}[][]", isBalanced("()[]{}[][]"));
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

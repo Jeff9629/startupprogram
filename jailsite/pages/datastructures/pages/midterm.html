@@ -1,0 +1,417 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Midterm</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+
+
+//--------------//
+// Instructions //
+//--------------//
+
+// This midterm is open everything, but obviously you cannot communicate.
+// You have to answer all the questions listed below.
+// You can only use functionality that we have covered in the book or in class.
+// Once you are done, zip this file and submit it through the Blackboard.
+// Here are a couple of tips and then the questions:
+// * Read carefully! (Meaning read the question several times.)
+// * Write down your steps in English (use comments), then write JavaScript.
+// * Enable the error console so that you can debug problems.
+// * Pay attention to indentation and code formatting.
+// * Try to make sure that your code always runs and test frequently.
+//   (If your code stops working, it must be because of the last change.)
+// * When stuck on a question, move on to the next one and return to it later.
+// * Try to finish as much as you can even if you don't have a complete answer,
+//   because you will receive partial credit when appropriate.
+
+
+
+//--------------------------//
+// Provided Data Structures //
+//--------------------------//
+
+// The following data structures are provided for your convenience.
+// All comments have been removed, please check your sources for more info.
+
+function Stack() {
+  this.items = [];
+}
+
+Stack.prototype.push = function(item) {
+  this.items.push(item);
+};
+
+Stack.prototype.pop = function() {
+  return this.items.pop();
+};
+
+Stack.prototype.isEmpty = function() {
+  return this.items.length === 0;
+};
+
+Stack.prototype.peek = function() {
+  return this.items[this.items.length-1];
+};
+
+Stack.prototype.size = function() {
+  return this.items.length;
+};
+
+Stack.prototype.clear = function() {
+  this.items = [];
+};
+
+Stack.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+function Queue() {
+  this.items = [];
+}
+
+Queue.prototype.enqueue = function(element) {
+  this.items.push(element);
+};
+
+Queue.prototype.dequeue = function() {
+  return this.items.shift();
+};
+
+Queue.prototype.front = function() {
+  return this.items[0];
+};
+
+Queue.prototype.isEmpty = function() {
+  return this.items.length === 0;
+};
+
+Queue.prototype.size = function() {
+  return this.items.length;
+};
+
+Queue.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+function Node(element) {
+  this.element = element;
+  this.next = null;
+}
+
+function LinkedList() {
+  this.length = 0;
+  this.head = null;
+}
+
+LinkedList.prototype.append = function(element) {
+  var node = new Node(element);
+  if (this.head === null) {
+    this.head = node;
+  }
+  else {
+    var tmp = this.head;
+    while (tmp.next !== null) {
+      tmp = tmp.next;
+    }
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.insert = function(position, element) {
+  var node = new Node(element);
+  if (position === 0) {
+    var oldHead = this.head;
+    this.head = node;
+    this.head.next = oldHead;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    node.next = tmp.next;
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.removeAt = function(position) {
+  var element = null;
+  if (position === 0) {
+    element = this.head.element;
+    this.head = this.head.next;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    element = tmp.next.element;
+    var prev = tmp;
+    var middle = tmp.next;
+    var next = middle.next;
+    prev.next = next;
+  }
+  this.length--;
+  return element;
+};
+
+LinkedList.prototype.remove = function(element) {
+  var position = this.indexOf(element);
+  return this.removeAt(position);
+};
+
+LinkedList.prototype.indexOf = function(element) {
+  var tmp = this.head;
+  for (var i = 0; i < this.length; i++) {
+    if (tmp.element === element) {
+      return i;
+    }
+    tmp = tmp.next;
+  }
+  return -1;
+};
+
+LinkedList.prototype.isEmpty = function() {
+  return this.length === 0;
+};
+
+LinkedList.prototype.size = function() {
+  var length = 0;
+  var tmp = this.head;
+  while (tmp !== null) {
+    length++;
+    tmp = tmp.next;
+  }
+  return length;
+};
+
+LinkedList.prototype.getHead = function() {
+  return this.head;
+}
+
+LinkedList.prototype.toString = function() {
+  var current = this.head;
+  var string = "List: ";
+  while (current) {
+    string += current.element + (current.next ? " -> " : "");
+    current = current.next;
+  }
+  return string;
+};
+
+LinkedList.prototype.print = function() {
+  console.log(this.toString());
+};
+
+function Set() {
+  this.items = {};
+}
+
+Set.prototype.add = function(value) {
+  if (!this.has(value)) {
+    this.items[value] = value;
+    return true;
+  }
+  return false;
+};
+
+Set.prototype.delete = function(value) {
+  if (this.has(value)) {
+    delete this.items[value];
+    return true;
+  }
+  return false;
+};
+
+Set.prototype.has = function(value) {
+  return this.items.hasOwnProperty(value);
+};
+
+Set.prototype.clear = function() {
+  this.items = {};
+};
+
+Set.prototype.size = function() {
+  return Object.keys(this.items).length;
+};
+
+Set.prototype.values = function() {
+  var values = [];
+  for (var key in this.items) {
+    values.push(this.items[key]);
+  }
+  return values;
+};
+
+Set.prototype.union = function(otherSet) {
+  var resultSet = new Set();
+  var values = this.values();
+  for (var i = 0; i < values.length; i++) {
+    resultSet.add(values[i]);
+  }
+  values = otherSet.values();
+  for (var i = 0; i < values.length; i++) {
+    resultSet.add(values[i]);
+  }
+  return resultSet;
+};
+
+Set.prototype.intersection = function(otherSet) {
+  var resultSet = new Set();
+  var values = this.values();
+  for (var i = 0; i < values.length; i++) {
+    if (otherSet.has(values[i])) {
+      resultSet.add(values[i]);
+    }
+  }
+  return resultSet;
+};
+
+Set.prototype.difference = function(otherSet) {
+  var resultSet = new Set();
+  var values = this.values();
+  for (var i = 0; i < values.length; i++) {
+    if (!otherSet.has(values[i])) {
+      resultSet.add(values[i]);
+    }
+  }
+  return resultSet;
+};
+
+Set.prototype.subset = function(otherSet) {
+  if (this.size() > otherSet.size()) {
+    return false;
+  }
+  else {
+    var values = this.values();
+    for (var i = 0; i < values.length; i++) {
+      if (!otherSet.has(values[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+
+
+//------------//
+// Question 1 //
+//------------//
+console.log("Question 1");
+
+// Use the following variables and data structures to answer this question.
+var stack = new Stack();
+var queue = new Queue();
+
+// a. Push the numbers 1, 2, and 3 onto the stack and print the contents
+//    of the stack to the console.
+stack.push(1);
+stack.push(2);
+stack.push(3);
+console.log("Stack:");
+stack.print();
+//    Note: stack and queue both have a print() method.
+
+// b. Pop each number off the stack and put it into the queue. Print the
+//    contents of the stack and the queue to the console after this step.
+//    Note: the stack should be empty after this step.
+while (!stack.isEmpty()){
+  var item = stack.pop();
+  queue.enqueue(item);
+}
+console.log("Stack:");
+stack.print();
+console.log("Queue:");
+queue.print();
+// c. Dequeue all the numbers from the queue and push them back onto the stack.
+//    Print the content of the stack to the console. What is different compared
+//    to question (a)?
+while (!queue.isEmpty()){
+  var item = queue.dequeue();
+  stack.push(item);
+}
+console.log("Stack:");
+stack.print();
+//------------//
+// Question 2 //
+//------------//
+console.log("Question 2");
+
+// a. A common way to remove duplicates from an array is to convert it to a
+//    set and then convert it back to an array. We will do that here.
+
+var input = [3, 4, 2, 2, 4, 5, 3, 1, 3];
+var set = new Set();
+
+// a. Get each element from the input array and store them in the set.
+while (!input.isEmpty()){
+  var item = input.pop();
+  set.add(item);
+}
+System.out.printIn(Set);
+// b. Get the elements from the set, put them back into an array, and print
+//    them. Does it work correctly? I.e., have the duplicates been removed?
+//    HINT: Set has an operation that is very useful here.
+while (!set.isEmpty()){
+  var item = set.pop();
+  input.add(item);
+}
+//Since input is an array and not a set/queue/stack, the method used in #1 did
+//not work out the way I would have wanted them to.
+
+// c. Finish the function below that checks whether an array has no duplicates.
+//    You have to use a Set in the implementation of this function.
+//    HINT: the return value of add() (true/false) indicates whether the
+//    element already exists in the set.
+
+function hasNoDuplicates(arr) {
+  var set = new Set();
+  // enter your solution here
+}
+
+// For testing (uncomment):
+//console.log(hasNoDuplicates(input) === false);
+//console.log(hasNoDuplicates([1, 2, 3]) === true);
+//console.log(hasNoDuplicates([1, 2, 2, 3]) === false);
+
+
+
+//------------//
+// Question 3 //
+//------------//
+console.log("Question 3");
+
+var list = new LinkedList();
+list.append(1);
+list.append(2);
+list.append(3);
+list.append(4);
+list.append(5);
+
+// a. We are going to extend LinkedList with a sum method. As the name
+//    implies, all elements in the linked list should be summed together.
+//    Return null if there are no elements in the list.
+//    Note: see the LinkedList implementation above for more details.
+
+LinkedList.prototype.sum = function() {
+  for (var i = 0; )
+  // note: use 'this' to refer to the linked list, e.g., this.getHead().
+};
+
+// b. Write a few tests for your code in (a) that shows it works correctly.
+//    Note: write the code even if you did not complete (a).
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

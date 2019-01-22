@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 5 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------------//
+// The linked list data structure //
+//--------------------------------//
+console.log("The linked list data structure");
+
+// 1. Suppose you have an array with 1,000 elements and a linked list with 1,000
+//    elements. For both data structures, you want to retrieve the last entry.
+//    Does one data structure complete that operation before the other (i.e.,
+//    is it faster)? If yes, how much faster? If no, why does it take the same
+//    amount of time?
+
+console.log("Linked List is a lot slower, has to go through every element.");
+
+//------------------------//
+// Creating a linked list //
+//------------------------//
+console.log("Creating a linked list");
+
+// We are going to implement the linked list data structure described in the
+// book. Instead of using 'let' we use 'var' everywhere. Note that this
+// implementation does not use the prototype (see homework). Here is a skeleton
+// that we will work on completing:
+
+function LinkedList() {
+
+  // helper class
+  function Node(element) {
+    this.element = element;
+    this.next = null;
+  }
+
+  // store length and head
+  var length = 0;
+  var head = null;
+
+  this.append = function(element) {
+    let node = new Node(element),
+    current;
+    if (head === null) {
+      head = node;
+    } else {
+      current = head;
+      while(current.next) {
+        current = current.next;
+      }
+      current.next = node;
+    }
+    length++;
+  };
+
+  this.insert = function(position, element) {
+    if (position < 0 || position > length){
+      return false
+    } else {
+      var node = new Node(element);
+      if (position === 0) {
+        node.next = head;
+        head = node;
+      } else {
+        var index = 0;
+        var previous = null;
+        var current = head;
+        while (index++ < position) {
+          previous = current;
+          current = current.next;
+        }
+        node.next = current
+        previous.next = node;
+      }
+      length++;
+      return true;
+    }
+  };
+
+  this.removeAt = function(position) {
+    if (position > -1 && position < length) {
+      let current = head,
+      previous, index = 0;
+      if (position === 0) {
+        head = current.next;
+      } else {
+        while (index++ < position) {
+          previous = current;
+          current = current.next;
+        }
+        previous.next = current.next;
+      }
+      length--;
+      return current.element;
+    } else {
+      return null;
+    }
+  };
+
+  this.remove = function(element) {
+    // remove a specific element from the list
+    // ...
+  };
+
+  this.indexOf = function(element) {
+    // return the index of an element in the list
+    // ...
+  };
+
+  this.isEmpty = function() {
+    // check whether the list is empty
+    // ...
+  };
+
+  this.size = function() {
+    // return the number of elements in the list
+    // ...
+  };
+
+  this.getHead = function() {
+    // return head node
+    // ...
+  }
+
+  this.toString = function() {
+    // overwrite the default toString method
+    var current = head;
+    var string = "List: ";
+    while (current) {
+      string += current.element + (current.next ? " -> " : "");
+      current = current.next;
+    }
+    return string;
+  };
+
+  this.print = function() {
+    // print to the console
+    console.log(this.toString());
+  };
+
+}
+
+// create a linked list to operate on
+var list = new LinkedList();
+
+// 1. Write pseudo code (meaning; use comments) to describe how you would
+//    implement the append method. HINT: What two scenarios can you distinguish?
+
+// I would use list.append(); to add the elements to my list, hopefully ina  decent order.
+
+// 2. Translate your pseudo code into actual code and test it.
+//    HINT: Use list.print() to test your code.
+
+list.append(15);
+list.append(10);
+list.print(LinkedList);
+
+// 3. Repeat (1) and (2) for insert.
+
+list.insert(0,26);
+list.print(LinkedList);
+
+// 4. Repeat (1) and (2) for removeAt.
+
+// 5. Repeat (1) and (2) for remove.
+
+// 6. Repeat (1) and (2) for indexOf.
+
+// 7. Repeat (1) and (2) for isEmpty.
+
+// 8. Repeat (1) and (2) for size.
+
+// 9. Repeat (1) and (2) for getHead.
+
+
+
+//---------------------//
+// Doubly linked lists //
+//---------------------//
+console.log("Doubly linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//-----------------------//
+// Circular linked lists //
+//-----------------------//
+console.log("Circular linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two linked lists as input and returns true if
+//    they have the same elements, and false otherwise. Test your code.
+
+function isEqual(stack1, stack2) {
+  if (stack1.size() !== stack2.size()) {
+    return false;
+  }
+  while (!stack1.isEmpty()) {
+    if (stack1.pop() !== stack2.pop()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+var stack1 = new Stack();
+var stack2 = new Stack();
+stack1.push(1);
+stack1.push(2);
+stack1.push(3);
+stack2.push(1);
+stack2.push(2);
+stack2.push(4);
+console.log(isEqual(stack1, stack2) === true);
+// this next one is true because both stacks are empty
+console.log(isEqual(stack1, stack2) === true);
+
+// 2. Implement the stack data structure using a linked list instead of an
+//    array. Use the prototype.
+
+function Stack() {
+  // put properties here (the linked list)
+  // do NOT use this.items = [];
+}
+// add methods through the prototype
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

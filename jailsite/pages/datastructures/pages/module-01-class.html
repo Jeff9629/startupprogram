@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 1 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You can enter both code and explanations. For an explanation, start
+//       the line with '//' which indicates a comment.
+
+// NOTE: console.log prints text to the browser console that you can enable
+//       to see the output. It is a little bit more convenient than alert so
+//       we will use it most of the time.
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//----------------------------//
+// Setting up the environment //
+//----------------------------//
+console.log("Setting up the environment");
+
+// 1. Open this file in the browser.
+// 2. Make sure to enable the developer tools.
+// 3. Install Atom.
+// 4. Change the content of the HTML body element from TODO to See Console!
+// 5. Reload the file in the browser.
+// 6. Copy this file and index.html to a new directory in your jail.
+// 7. Homework submissions will include a link to a file in your jail.
+
+// Relevant tutorials and videos:
+// https://it.pointpark.edu/tutorials/atom-editor/
+// https://it.pointpark.edu/tutorials/creating-your-homepage/
+// https://it.pointpark.edu/tutorials/filezilla/
+
+
+
+//-------------------//
+// JavaScript basics //
+//-------------------//
+console.log("JavaScript basics");
+
+// 1. Search the web to find the difference between static and dynamic typing.
+// Static typing is any code that needs to be defined before use; dynamic typing does not need to be defined in order to be used
+
+//dynamic = var number = 10;
+//static = int number = 10;
+
+// 2. Define a variable and initialized it to the string Hello World!
+var greeting = "Hello World!";
+// 3. Print the content of the variable to the console (hint: use console.log).
+console.log(greeting);
+// 4. Alert the content of the variable to the screen.
+
+alert(greeting);
+
+// 5. Predict what the following code will print (write it down), then try it.
+var myVariable = "global";
+myOtherVariable = "global";
+
+function myFunction() {
+  var myVariable = "local";
+  return myVariable;
+}
+
+function myOtherFunction() {
+  myOtherVariable = "local";
+  return myOtherVariable;
+}
+
+console.log(myVariable); //displays global
+console.log(myFunction()); //displays local
+console.log(myOtherVariable);
+console.log(myOtherFunction());
+//console.log(myVariable);
+//console.log(myFunction());
+//console.log(myOtherVariable);
+//console.log(myOtherFunction());
+//console.log(myOtherVariable);
+
+// 6. Figure out what the & operator does. E.g., 10 & 5 == 0 and 10 & 6 == 2, why?
+// NOTE: this is a difficult question
+// HINT: use the console in the browser for testing
+
+// 1010
+// 0101
+// ----&
+// 0000 => 0
+
+// 1010
+// 0110
+// ----&
+// 0010 => 2
+
+// 7. What is the difference between == and ===? Give an example.
+
+console.log(7 == "7");
+console.log(7 === "7");
+
+//--------------------//
+// Control structures //
+//--------------------//
+console.log("Control structures");
+
+// 1. Write an if statement to check if a year is a leap year and print it to the console.
+var year = 2016;
+// ... put if here ...
+if (year % 4 === 0) {
+  console.log(year + " is a leap year!");
+}
+else {
+  console.log(year + " is not a leap year!");
+}
+// 2. Write a loop to calculate n! (n factorial) and print it to the console.
+var n = 10;
+// ... put loop here ...
+var total = 1;
+for (var i = 0; i <= n; i++) {
+  total = total *i;
+}
+console.log("Factorial: " + total);
+
+//-----------//
+// Functions //
+//-----------//
+console.log("Functions");
+
+// 1. Write a function to check if an array contains a specific number at the start or end.
+function checkForNumber(arr, num) {
+
+  return arr[0] === num || arr[arr.length-1] === num;
+}
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 4)); // should be true
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 3)); // should be true
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 2)); // should be false
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 13)); // should be false
+
+
+
+//-------------------------------------------//
+// Object-oriented programming in JavaScript //
+//-------------------------------------------//
+console.log("Object-oriented programming in JavaScript");
+
+// 1. Add methods to the following object to calculate the circumference and area.
+
+function Triangle(side) {
+  this.side = side;
+}
+
+// ... add getCircumference and getArea methods ...
+// HINT: use the prototype
+
+Triangle.prototype.getCircumference = function() {
+  return 3 * this.side;
+};
+
+Triangle.prototype.getArea = function() {
+  return (Math.sqrt(3) / 4) * this.side * this.side;
+
+};
+
+var triangle = new Triangle(5);
+console.log("The circumference for the triangle is " + triangle.getCircumference());
+console.log("The area for the triangle is " + triangle.getArea());
+//console.log("The circumference for the triangle is " + triangle.getCircumference());
+//console.log("The area for the triangle is " + triangle.getArea());
+
+
+
+//---------------------//
+// Debugging and tools //
+//---------------------//
+
+// 1. Always use the developer tools.
+// 2. See 1.
+
+
+
+//-----------------------------------------------//
+// Introduction to ECMAScript 6 and ECMAScript 7 //
+//-----------------------------------------------//
+
+// 1. Both are new JavaScript language specifications (the language evolves).
+// 2. This is not important right now (but you can look into it if you want).
+// 3. If you do not recognize something look it up.
+
+</script>
+</head>
+<body>
+  Take A Look At That Console
+</body>
+</html>

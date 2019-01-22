@@ -1,0 +1,335 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 5 Homework Solutions</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------------//
+// The linked list data structure //
+//--------------------------------//
+console.log("The linked list data structure");
+
+// Skip.
+
+
+
+//------------------------//
+// Creating a linked list //
+//------------------------//
+console.log("Creating a linked list");
+
+// 1. Turn the implementation from class into one that uses the prototype. Make
+//    sure to test your code.
+
+// helper class
+function Node(element) {
+  this.element = element;
+  this.next = null;
+}
+
+function LinkedList() {
+  // store length and head
+  this.length = 0;
+  this.head = null;
+}
+
+LinkedList.prototype.append = function(element) {
+  // add a new item to the end of the list
+  var node = new Node(element);
+  if (this.head === null) {
+    // no nodes yes, so create first one
+    this.head = node;
+  }
+  else {
+    // there is at least one node
+    var tmp = this.head;
+    while (tmp.next !== null) {
+      // get the next node
+      tmp = tmp.next;
+    }
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.insert = function(position, element) {
+  // insert a new item at a specific location
+  var node = new Node(element);
+  // if we insert at position 0, we have to update head
+  // the new head should point to the old head
+  if (position === 0) {
+    // keep a reference to the old head
+    var oldHead = this.head;
+    // point to new head
+    this.head = node;
+    // make the new head point to the old head
+    this.head.next = oldHead;
+  }
+  else {
+    // if we insert at position > 0
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    // make the new node point to the next node
+    node.next = tmp.next;
+    // make tmp point to node
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.removeAt = function(position) {
+  // remove an element from a specific location
+  var element = null;
+  if (position === 0) {
+    // change head to the element after head
+    element = this.head.element;
+    this.head = this.head.next;
+  }
+  else {
+    // find the right location
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    // get the element
+    element = tmp.next.element;
+    // remove node by skipping over
+    var prev = tmp;
+    var middle = tmp.next;
+    var next = middle.next;
+    prev.next = next;
+    //tmp.next = tmp.next.next;
+  }
+  this.length--;
+  return element;
+};
+
+LinkedList.prototype.remove = function(element) {
+  // remove a specific element from the list
+  var position = this.indexOf(element);
+  return this.removeAt(position);
+};
+
+LinkedList.prototype.indexOf = function(element) {
+  // return the index of an element in the list
+  var tmp = this.head;
+  // walk through the list until encountering the element
+  for (var i = 0; i < this.length; i++) {
+    if (tmp.element === element) {
+      // element found, return index
+      return i;
+    }
+    // get next element
+    tmp = tmp.next;
+  }
+  // the element was not found, return -1
+  return -1;
+};
+
+LinkedList.prototype.isEmpty = function() {
+  // check whether the list is empty
+  return this.length === 0;
+};
+
+LinkedList.prototype.size = function() {
+  // return the number of elements in the list
+  //return this.length;
+  var length = 0;
+  var tmp = this.head;
+  while (tmp !== null) {
+    length++;
+    tmp = tmp.next;
+  }
+  return length;
+};
+
+LinkedList.prototype.getHead = function() {
+  // return head node
+  return this.head;
+}
+
+LinkedList.prototype.toString = function() {
+  // overwrite the default toString method
+  var current = this.head;
+  var string = "List: ";
+  while (current) {
+    string += current.element + (current.next ? " -> " : "");
+    current = current.next;
+  }
+  return string;
+};
+
+LinkedList.prototype.print = function() {
+  // print to the console
+  console.log(this.toString());
+};
+
+var list = new LinkedList();
+
+list.append(1);
+list.append(2);
+list.append(3);
+list.print();
+
+list.insert(0, 0);
+list.insert(4, 4);
+list.insert(2, 13);
+list.print();
+
+list.removeAt(2);
+list.removeAt(4);
+list.removeAt(0);
+list.print();
+
+console.log(list.indexOf(0) === -1);
+console.log(list.indexOf(1) === 0);
+console.log(list.indexOf(2) === 1);
+console.log(list.indexOf(3) === 2);
+
+
+
+//---------------------//
+// Doubly linked lists //
+//---------------------//
+console.log("Doubly linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//-----------------------//
+// Circular linked lists //
+//-----------------------//
+console.log("Circular linked lists");
+
+// Skip. NOTE: It may be useful to read this section anyway.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// Linked lists are often used for problems where a lot of information can
+// be shared in a certain way. For example, suppose we have the following
+// directions involving 7 different landmarks:
+//   1. A1 -> B -> C -> D -> E
+//   2. A2 -> B -> C -> D -> E
+//   3. A3 -> A4 -> C -> D -> E
+// As you can see, all of these chains have a lot in common. They start out as
+// three separate linked lists but converge into one that ends with C -> D -> E.
+// We will implement this but need to make some modifications.
+
+// creating the landmarks
+function Landmark(name) {
+  this.name = name;
+  // this would normally store more information, such as location
+  this.toString = function() {
+    return "Landmark " + this.name;
+  };
+}
+
+var a1 = new Landmark("A1");
+var a2 = new Landmark("A2");
+var a3 = new Landmark("A3");
+var a4 = new Landmark("A4");
+var b = new Landmark("B");
+var c = new Landmark("C");
+var d = new Landmark("D");
+var e = new Landmark("E");
+
+var list1 = new LinkedList();
+var list2 = new LinkedList();
+var list3 = new LinkedList();
+
+// 1. Store the landmarks for directions (1) in list1 using append.
+
+list1.append(a1);
+list1.append(b);
+list1.append(c);
+list1.append(d);
+list1.append(e);
+list1.print();
+
+// 2. Store the landmarks for directions (2) in list2, but only include A2 for
+//    now (so do NOT add B, C, D, and E just yet).
+
+list2.append(a2);
+list2.print();
+
+// 3. Implement a getNodeAt(position) method (using the prototype) that returns
+//    the node in a linked list at a given position (make sure to return the
+//    node and not the element!).
+
+LinkedList.prototype.getNodeAt = function(position) {
+  // find the right location
+  var tmp = this.head;
+  for (var i = 0; i < position; i++) {
+    tmp = tmp.next;
+  }
+  return tmp;
+};
+
+// 4. Implement an appendNode(node) method (using the prototype) that appends a
+//    node to a linked list (as opposed to an element!).
+
+LinkedList.prototype.appendNode = function(node) {
+  // add a new item to the end of the list
+  if (this.head === null) {
+    // no nodes yes, so create first one
+    this.head = node;
+  }
+  else {
+    // there is at least one node
+    var tmp = this.head;
+    while (tmp.next !== null) {
+      // get the next node
+      tmp = tmp.next;
+    }
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+// 5. Uncomment the lines below and make sure the correct directions are
+//    printed (see above).
+
+var bNode = list1.getNodeAt(1); // NOTE: this is the node containing B
+list2.appendNode(bNode); // append 'node B' to 'node A2'
+list1.print();
+list2.print();
+
+// 6. Follow the same steps for directions (3). First add A3 and A4 to list3,
+//    then get the third node (second position) from list1, and append this
+//    node to list3.
+
+list3.append(a3);
+list3.append(a4);
+var cNode = list1.getNodeAt(2);
+list3.appendNode(cNode);
+list3.print();
+
+// 7. What is the problem with the size() method? How can you fix this?
+
+// The problem is that the linked lists are now shared so the length should be
+// calculated dynamically (i.e., walk through the list and count the number
+// of elements every time size() is called).
+
+// See size() above for the correct implementation.
+
+console.log(list1.size());
+console.log(list2.size());
+console.log(list3.size());
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

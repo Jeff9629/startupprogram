@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 11 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//------------------------//
+// The sorting algorithms //
+//------------------------//
+
+console.log("The sorting algorithms");
+
+// 1. Implement ArrayList using the prototype.
+
+function ArrayList() {
+  this.array = [];
+}
+
+  ArrayList.prototype.insert = function(item) {
+    this.array.push(item);
+  };
+
+  ArrayList.prototype.size = function() {
+    return this.array.length;
+  };
+
+  ArrayList.prototype.get = function(idx) {
+    return this.array[idx];
+  };
+
+  ArrayList.prototype.toString = function() {
+    return this.array.join();
+  };
+
+  function swap(array, index1, index2) {
+    var aux = array[index1];
+    array[index1] = array[index2];
+    array[index2] = aux;
+  }
+
+  function createNonSortedArray(size) {
+    var array = new ArrayList();
+    for (var i = size; i > 0; i--) {
+      this.array.insert(i);
+    }
+    return array;
+  }
+
+// 2. Complete the createNonSortedRandomArray(size) below by returning an
+//    ArrayList with the numbers 1, 2, ..., size in random order.
+//    NOTE: there are multiple ways to achieve this.
+
+function Set() {
+    this.items = {};
+  };
+
+Set.prototype.add = function(value) {
+  if (!this.has(value)) {
+    this.items[value] = value;
+    return true;
+  }
+    return false;
+};
+
+Set.prototype.delete = function(value) {
+  if (this.has(value)) {
+    delete this.items[value];
+    return true;
+  }
+  return false;
+};
+
+Set.prototype.has = function(value) {
+  return this.items.hasOwnProperty(value);
+};
+
+Set.prototype.clear = function() {
+  this.items = {};
+};
+
+Set.prototype.size = function() {
+  return Object.keys(this.items).length;
+};
+
+Set.prototype.values = function() {
+  var values = [];
+  for (var key in this.items) {
+    values.push(this.items[key]);
+  }
+  return values;
+};
+
+function createNonSortedRandomArray(size) {
+  var set = new Set();
+  var array = new ArrayList();
+  var ran;
+  for (var i = size; i > 0; i--) {
+    ran = Math.floor((Math.random() * size) + 1);
+    if(set.add(ran) === true){
+    array.insert(ran);
+  }
+    else{
+      i++;
+    }
+    }
+  return array;
+}
+
+var nsra = createNonSortedRandomArray(10);
+console.log("createNonSortedRandomArray");
+console.log(nsra.toString());
+
+// 3. Implement the Quick Sort algorithm and test your code with the function
+//    you wrote for (2).
+
+ArrayList.prototype.quickSort = function(){
+  quick(this.array, 0, this.array.length - 1)
+};
+
+var quick = function(array, left, right){
+  var index;
+  if(array.length > 1){
+    index = partition(array, left ,right);
+    if(left < index - 1){
+      quick(array, left, index - 1);
+    }
+    if(index < right){
+      quick(array, index, right);
+    }
+  }
+};
+var partition = function(array, left, right){
+  var pivot = array[Math.floor((right + left) / 2 )];
+  var i = left;
+  var j = right;
+  while(i <= j){
+    while(array[i] < pivot){
+      i++;
+    }
+    while(array[j] > pivot){
+      j--;
+    }
+    if(i <= j){
+      swap(array, i, j);
+      i++;
+      j--;
+    }
+  }
+  return i;
+  }
+
+console.log("quickSort");
+nsra.quickSort();
+console.log(nsra.toString());
+
+
+//----------------------//
+// Searching algorithms //
+//----------------------//
+console.log("Searching algorithms");
+
+// 1. Implement the binary search algorithm and test your code.
+
+ArrayList.prototype.binarySearch = function(item){
+  this.quickSort();
+  var low = 0;
+  high = this.array.length - 1;
+  var mid;
+  var element;
+  while(low <= high){
+    mid = Math.floor((low + high) / 2);
+    element = this.array[mid];
+    if(element < item){
+      low = mid + 1;
+    }
+    else if(element > item){
+      high = mid - 1;
+    }
+    else{
+      return mid;
+    }
+  }
+  return - 1;
+};
+
+var binTest = createNonSortedRandomArray(10);
+console.log("Binary Search:")
+console.log(binTest.binarySearch(8));
+console.log(binTest.binarySearch(11));
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// The following set of steps come from an earlier homework.
+
+// The following text is from the all the Amendments in the Bill of Rights.
+var text = "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances. A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed. No Soldier shall, in time of peace be quartered in any house, without the consent of the Owner, nor in time of war, but in a manner to be prescribed by law. The right of the people to be secure in their persons, houses, papers, and effects, against unreasonable searches and seizures, shall not be violated, and no Warrants shall issue, but upon probable cause, supported by Oath or affirmation, and particularly describing the place to be searched, and the persons or things to be seized. No person shall be held to answer for a capital, or otherwise infamous crime, unless on a presentment or indictment of a Grand Jury, except in cases arising in the land or naval forces, or in the Militia, when in actual service in time of War or public danger; nor shall any person be subject for the same offence to be twice put in jeopardy of life or limb; nor shall be compelled in any criminal case to be a witness against himself, nor be deprived of life, liberty, or property, without due process of law; nor shall private property be taken for public use, without just compensation. In all criminal prosecutions, the accused shall enjoy the right to a speedy and public trial, by an impartial jury of the State and district wherein the crime shall have been committed, which district shall have been previously ascertained by law, and to be informed of the nature and cause of the accusation; to be confronted with the witnesses against him; to have compulsory process for obtaining witnesses in his favor, and to have the Assistance of Counsel for his defence. In Suits at common law, where the value in controversy shall exceed twenty dollars, the right of trial by jury shall be preserved, and no fact tried by a jury, shall be otherwise re-examined in any Court of the United States, than according to the rules of the common law. Excessive bail shall not be required, nor excessive fines imposed, nor cruel and unusual punishments inflicted. The enumeration in the Constitution, of certain rights, shall not be construed to deny or disparage others retained by the people. The powers not delegated to the United States by the Constitution, nor prohibited by it to the States, are reserved to the States respectively, or to the people.";
+
+// First we make the text lower case.
+text = text.toLowerCase();
+
+// Then we remove punctuation by using a regular expression.
+text = text.replace(/[.,;]/g, "");
+
+// And store the words into an array.
+var textArray = text.split(" ");
+
+// 1. Use sorting and searching to find out whether the word 'president'
+//    appears in the amendments. You should use the code you wrote above.
+
+var textArrayList = new ArrayList();
+for(var i = 0; i < textArray.length; i++){
+  textArrayList.insert(textArray[i]);
+};
+
+console.log("Has the word 'president':");
+console.log(textArrayList.binarySearch("president") !== -1);
+
+// 2. Use sorting and searching to find out whether the word 'state' appears
+//    in the amendments. You should use the code you wrote above.
+
+console.log("Has the word 'state':");
+console.log(textArrayList.binarySearch("state") !== -1);
+
+// 3. Use sorting and searching to find out whether the word 'country' appears
+//    in the amendments. You should use the code you wrote above.
+
+console.log("Has the word 'country':");
+console.log(textArrayList.binarySearch("country") !== -1);
+
+
+
+</script>
+</head>
+<body>
+  Take A Look At That Console!
+</body>
+</html>

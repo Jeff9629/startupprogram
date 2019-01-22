@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Palindrome 2</title>
+</head>
+<body>
+Check console for answer. Hopefully this worked for you. <a href="programhome.html">Click here to return home.</a><script lang="JavaScript">
+///Put your code here for the palindrome problem v=2///
+ function stripString(s)
+ {
+   return s.replace( /[^A-Za-z0-9_]/g, "");
+ }
+ var str = prompt("Enter a string to check:");
+ str = stripString(str);
+ console.log("Original sting with special characters removed: %s", str);
+ var array1 = str.split("");
+ var array2 = str.split("").reverse();
+ console.log( "foward: "+array1);
+ console.log( "reverse: "+array2);
+
+var msgBase = "The string you entered ";
+var msg = msgBase + "was a palindrome!";
+
+var i;
+var j;
+for(  i=0,j = array1.length-1;
+      i < j;
+      i++, j-- )
+{
+    console.log("i= %d  array1 is: %s  j= %d  array2 is: %s", i,array1[i], j, array1[j]);
+    if( array1[i] !== array1[j] )
+    {
+      msg = "This string is not a palindrome!";
+      break;
+    }
+}
+console.log(msg);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 1 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You can enter both code and explanations. For an explanation, start
+//       the line with '//' which indicates a comment.
+
+// NOTE: console.log prints text to the browser console that you can enable
+//       to see the output. It is a little bit more convenient than alert so
+//       we will use it most of the time.
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//----------------------------//
+// Setting up the environment //
+//----------------------------//
+console.log("Setting up the environment");
+
+// 1. When you are done copy this file to your jail and submit the link through Blackboard.
+
+
+
+//-------------------//
+// JavaScript basics //
+//-------------------//
+console.log("JavaScript basics");
+
+// 1. Figure out what the << operator does. HINT: it is related to &.
+// The << operator is a bitwise operator that causes a shift to the left by pushing zeros to the right and letting the leftmost bits fall off.
+// An example would be 5 << 1 = 10
+console.log("When messing with the console to get other answers, the common pattern I notice is it takes the main value (5), and multiplies it by 2 however many times you tell it to (1).")
+console.log("In this instance, 5 multiplied by 2 one time equals 10. If I set it to 5 << 2, I would get 20 (5*2*2).")
+console.log("Also, when doing research it takes the binary value of a number and shifts it the other number of times to the left.")
+
+//--------------------//
+// Control structures //
+//--------------------//
+console.log("Control structures");
+
+// 1. Write an if statement that prints the number of days in a month to the console (using 3 letter abbreviations).
+var month = "jan";
+if (month === "jun" || month === "apr" || month === "sep" || month === "nov") {
+  console.log(month + " has 30 days.");
+}
+else if (month === "jan" || month === "mar" || month === "may" || month === "jul" || month === "aug" || month === "oct" || month === "dec") {
+  console.log(month + " has 31 days.");
+}
+else if (month === "feb") {
+  console.log(month + " has 28 days.");
+}
+// 2. Write a loop to calculate 1+2+3+...+n and print it to the console.
+var n = 50;
+// ... put loop here ...var total = 1;
+var n = 50;
+var x = 0;
+for (var i = 0; i <= n; i++) {
+  x = x + i;
+  console.log(x)
+}
+
+//-----------//
+// Functions //
+//-----------//
+console.log("Functions");
+
+// 1. Write a function to check if an array contains a specific number but is not at the start or the end.
+function checkForNumber(arr, num) {
+  if (arr.length = 4) {
+    if (num === arr[0] || num === arr[3]) {
+      return false;
+    }
+    else if (num === arr[1] || num === arr[2]) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  else if (arr.length = 5) {
+    if (num === arr[0] || num === arr[4]) {
+      return false;
+    }
+    else if (num === arr[1] || num === arr[2] || num === arr[3]) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+}
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 4)); // should be false
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 3], 3)); // should be false
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 7, 3], 2)); // should be true
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 7, 3], 13)); // should be false
+console.log("Checking for number: " + checkForNumber([4, 2, 5, 5], 5)); // should be false
+
+
+
+//-------------------------------------------//
+// Object-oriented programming in JavaScript //
+//-------------------------------------------//
+console.log("Object-oriented programming in JavaScript");
+
+// 1. Add methods to the following object to calculate the circumference and area.
+// ... add getCircumference and getArea methods ...
+// HINT: use the prototype
+
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+}
+Rectangle.prototype.getCircumference = function() {
+  return (this.width + this.height) * 2;
+}
+Rectangle.prototype.getArea = function() {
+  return (this.width * this.height);
+}
+
+var rectangle = new Rectangle(10, 5);
+console.log("The circumference for the rectangle is " + rectangle.getCircumference());
+console.log("The area for the rectangle is " + rectangle.getArea());
+
+
+//---------------------//
+// Debugging and tools //
+//---------------------//
+
+// None.
+
+
+
+//-----------------------------------------------//
+// Introduction to ECMAScript 6 and ECMAScript 7 //
+//-----------------------------------------------//
+
+// None.
+
+
+
+//---------//
+// Project //
+//---------//
+
+// Normally a bigger programming task follows at the end.
+// We skip this in the first week.
+
+</script>
+</head>
+<body>
+  Take A Look At That Console!
+</body>
+</html>

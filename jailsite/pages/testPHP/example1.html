@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Form Population with json</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <script>
+  $(document).on("pagecreate",function(){
+    alert("page create");
+    $.getJSON('http://student.it.pointpark.edu/showPHP/orders.php', function(jrs) {
+      var selectList = "<select name='orderNumbers' id='orderNumbers' >";
+      selectList += "<option value=" + jrs[0].orderNumber+" selected "+ ">" +jrs[0].orderNumber+"</option>";
+      for( i=1; i < jrs.length ; i++)
+      {
+       selectList += "<option value=" + jrs[i].orderNumber+ ">" +jrs[i].orderNumber+"</option>";
+     } //end for
+     selectList += "</select>";
+    var ctrl = $('#my-container');
+    ctrl.append("&nbsp;&nbsp;&nbsp; Select Order:  ");
+    ctrl.append(selectList);
+    ctrl.append("<br> Selected Order: ");
+    ctrl.append($('<input type=text class=\"input\" id=tb value=\"             \"   />'));
+    $('select').on('change', function() {
+      $('#tb').val(this.value);
+  //    $('#your-choice').html(this.value);
+      var  param = "http://student.it.pointpark.edu/showPHP/getOrderLine.php?value="+this.value;
+   alert ( param);
+      $.getJSON(param, function(vals){
+      var ctl = $('#your-choice');
+      ctl.append("Order Number:"+vals[0].orderNumber+ "<br>");
+      ctl.append("Order Date  :"+vals[0].orderDate+ "<br>");
+      ctl.append("Customer    :"+vals[0].customerNumber+"<br><hr />");
+      var total = 0;
+      var n = 0;
+      for( var i=0; i < vals.length ; i++)
+      {
+        ctl.append("Part Number :"+vals[i].partNumber+" Number Ordered:"+vals[i].numberOrdered);
+        ctl.append("Bill Amount :"+vals[i]['Bill Amount']+"<br>");
+        n =  parseInt(vals[i]['Bill Amount'], 10);
+        total = total + n;
+      }
+      ctl.append("Bill Total :"+total+"<br>");
+      ctl.append("<hr>");
+
+      //alert( vals[0].orderNumber+" "+vals[0].customerNumber+"<br>");
+      //alert( vals[0].partNumber+" "+vals[0].quotedPrice+" ");
+      //alert( vals[1].partNumber+" "+vals[1].quotedPrice+" ");
+      //alert( vals[0]['Bill Amount']+ " "+vals.length );
+      });
+    }); //end on change
+  });  //end json
+});  //end page create
+
+    $(document).ready(function(){
+
+    }); //end document ready
+
+  </script>
+  </head>
+  <body>
+  <div id= "my-container">
+
+  </div>
+  <div id= "your-choice">
+
+  </div>
+
+  </body>
+</html>

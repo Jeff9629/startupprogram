@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 3 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//--------------------------//
+// The stack data structure //
+//--------------------------//
+console.log("The stack data structure");
+
+// 1. Implement the stack data structure described in the book. Instead of
+//    using 'let items = [];' use 'var items = []'. Note that this
+//    implementation does not use the prototype (see homework).
+
+function Stack() {
+var items = [];
+this.push = function(element) {
+  items.push(element);
+  };
+
+this.pop = function() {
+  return items.pop();
+};
+this.peek = function() {
+  return items[items.length-1];
+};
+this.isEmpty = function() {
+  return this.size() === 0;
+};
+this.size = function() {
+  return items.length;
+};
+this.clear = function() {
+  items = [];
+};
+this.print = function() {
+  console.log(items.toString());
+};
+}
+// 2. Write a simple test program that shows your stack works.
+
+var stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+console.log(stack.size() === 3);
+console.log(stack.peek() === 3);
+//----------------------------------//
+// ECMAScript 6 and the Stack class //
+//----------------------------------//
+console.log("ECMAScript 6 and the Stack class");
+
+// Skip.
+
+
+
+//-------------------------------//
+// Solving problems using stacks //
+//-------------------------------//
+console.log("Solving problems using stacks");
+
+// 1. Use the prompt to ask for a decimal number. Then write a loop that divides
+//    the number by two in every iteration and prints the remainder (0 or 1).
+//    For example, if the number is 5 the remainder is 1 and the number in the
+//    next iteration should be 2 (5/2 rounded down).
+
+var decNumber = Number(prompt("Give me a number or else: "));
+
+function divideBy2(decNumber) {
+  var remStack = new Stack(),
+  rem,
+  binaryString = '';
+  while (decNumber > 0) { //{1}}
+    rem = Math.floor(decNumber % 2); //{2}
+    remStack.push(rem); //{3}
+    decNumber = Math.floor(decNumber / 2); //{4}
+}
+
+while (!remStack.isEmpty()) { //{5}
+  binaryString += remStack.pop().toString();
+}
+
+return binaryString;
+}
+console.log(divideBy2(decNumber));
+
+// 2. The algorithm in (1) can be used to convert a decimal number to a binary
+//    number but there is one issue. What is the problem?
+
+// Wrong order.
+
+// 3. Solve the problem in (2) using a stack.
+function baseConverter(decNumber, base) {
+  var remStack = new Stack(),
+  rem,
+  baseString = '',
+  digits = '0123456789ABCDEF'; //{6}
+
+  while (decNumber > 0) {
+    rem = Math.floor(decNumber % base);
+    remStack.push(rem);
+    decNumber = Math.floor(decNumber / base);
+  }
+
+  while (!remStack.isEmpty()) {
+    baseString += digits[remStack.pop()]; //{7}
+  }
+  return baseString
+}
+console.log(baseConverter(100345,2));
+console.log(baseConverter(100345,8));
+console.log(baseConverter(100345,16));
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Write a function that takes two stacks as input and returns true if they
+//    have the same elements, and false otherwise. Test your code.
+
+function isEqual(stack1, stack2) {
+  if (stack1.size() !== stack2.size()) {
+    return false;
+  }
+while (stack1.pop() === stack2.pop()) {}
+return stack1.isEmpty() && stack2.isEmpty();
+}
+
+
+
+</script>
+</head>
+<body>
+  Take A Look At That Console!
+</body>
+</html>

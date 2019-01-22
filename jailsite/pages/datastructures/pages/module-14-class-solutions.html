@@ -1,0 +1,1005 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 14 Class</title>
+<style>* { font-family: monospace; }</style>
+<script>
+// Dictionaries and Hashes 2&3.
+// Sorting and Searching Algorithms 1.
+// Project 1&3.
+// Trees 1.
+// Graphs 1.
+
+
+
+//--------------------------------//
+// Review Dictionaries and Hashes //
+//--------------------------------//
+console.log("Review Dictionaries and Hashes");
+
+// 1. Create a hash table that uses the following function as hash function.
+
+function hashCode(str) {
+  var hash = 0;
+  if (str.length == 0) return hash;
+  for (var i = 0; i < str.length; i++) {
+    var char = str.charCodeAt(i);
+    hash = ((hash<<5)-hash)+char;
+    hash = hash & hash;
+  }
+  return hash % 1013;
+}
+
+function HashTable() {
+  // store all elements in the table array
+  this.table = [];
+}
+
+// this is the key line
+HashTable.prototype.hashfn = hashCode;
+/*
+// previous hash function
+function(key) {
+  var hash = 5381;
+  for (var i = 0; i < key.length; i++) {
+    hash = hash * 33 + key.charCodeAt(i);
+  }
+  return hash % 1013;
+};
+*/
+
+HashTable.prototype.put = function(key, value) {
+  // add or update a new item
+  // NOTE: the method in the book has a problem
+  var index = this.hashfn(key);
+  // we check if index is already in table
+  if (this.table[index] === undefined) {
+    // create a new linked list
+    this.table[index] = new LinkedList();
+  }
+  // retrieve the linked list
+  var list = this.table[index];
+  // check if the key already exists
+  var tmp = list.head;
+  while (tmp !== null) {
+    // get the key-value pair
+    var kvp = tmp.element;
+    // check if new key is equal to existing key
+    if (kvp.key === key) {
+      // if yes, we update
+      kvp.value = value;
+      return;
+    }
+    // if no, we keep searching
+    tmp = tmp.next;
+  }
+  // key was not yet updated, so we add a new key-value pair
+  list.append(new ValuePair(key, value));
+};
+
+HashTable.prototype.remove = function(key) {
+  // remove an item
+  var index = this.hashfn(key);
+  if (this.table[index] === undefined) {
+    return false;
+  }
+  var list = this.table[index];
+  if (list.head.element.key === key) {
+    list.head = list.head.next;
+    if (list.head === null) {
+      // linked list is empty again, so remove it
+      this.table[index] = undefined;
+    }
+    return true;
+  }
+  else {
+    var tmp = list.head;
+    while (tmp.next !== null) {
+      // get the key-value pair
+      var kvp = tmp.next.element;
+      // check if new key is equal to existing key
+      if (kvp.key === key) {
+        // if yes, we delete the next element
+        tmp.next = tmp.next.next;
+        return true;
+      }
+      // if no, we keep searching
+      tmp = tmp.next;
+    }
+  }
+  return false;
+};
+
+HashTable.prototype.get = function(key) {
+  // get value that belongs to key
+  var index = this.hashfn(key);
+  if (this.table[index] === undefined) {
+    return undefined;
+  }
+  // return the value that matches key
+  var list = this.table[index];
+  // append key value pair to the list
+  var tmp = list.head;
+  while (tmp !== null) {
+    // get the key-value pair
+    var kvp = tmp.element;
+    // check if new key is equal to existing key
+    if (kvp.key === key) {
+      // if yes, we update
+      return kvp.value;
+    }
+    // if no, we keep searching
+    tmp = tmp.next;
+  }
+  return undefined;
+};
+
+HashTable.prototype.print = function() {
+  // print the content of the hash table
+  for (var i = 0; i < this.table.length; i++) {
+    if (this.table[i] !== undefined) {
+      console.log(i + ": " + this.table[i]);
+    }
+  }
+};
+
+function ValuePair(key, value) {
+  this.key = key;
+  this.value = value;
+  this.toString = function() {
+    return "[" + this.key + " - " + this.value + "]";
+  };
+};
+
+//-----------------------------------------------------------------------------
+// call this LLNode so that it does not conflict with tree nodes
+function LLNode(element) {
+  this.element = element;
+  this.next = null;
+}
+
+function LinkedList() {
+  this.length = 0;
+  this.head = null;
+}
+
+LinkedList.prototype.append = function(element) {
+  var node = new LLNode(element);
+  if (this.head === null) {
+    this.head = node;
+  }
+  else {
+    var tmp = this.head;
+    while (tmp.next !== null) {
+      tmp = tmp.next;
+    }
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.insert = function(position, element) {
+  var node = new LLNode(element);
+  if (position === 0) {
+    var oldHead = this.head;
+    this.head = node;
+    this.head.next = oldHead;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    node.next = tmp.next;
+    tmp.next = node;
+  }
+  this.length++;
+};
+
+LinkedList.prototype.removeAt = function(position) {
+  var element = null;
+  if (position === 0) {
+    element = this.head.element;
+    this.head = this.head.next;
+  }
+  else {
+    var tmp = this.head;
+    for (var i = 0; i < position-1; i++) {
+      tmp = tmp.next;
+    }
+    element = tmp.next.element;
+    var prev = tmp;
+    var middle = tmp.next;
+    var next = middle.next;
+    prev.next = next;
+  }
+  this.length--;
+  return element;
+};
+
+LinkedList.prototype.remove = function(element) {
+  var position = this.indexOf(element);
+  return this.removeAt(position);
+};
+
+LinkedList.prototype.indexOf = function(element) {
+  var tmp = this.head;
+  for (var i = 0; i < this.length; i++) {
+    if (tmp.element === element) {
+      return i;
+    }
+    tmp = tmp.next;
+  }
+  return -1;
+};
+
+LinkedList.prototype.isEmpty = function() {
+  return this.length === 0;
+};
+
+LinkedList.prototype.size = function() {
+  var length = 0;
+  var tmp = this.head;
+  while (tmp !== null) {
+    length++;
+    tmp = tmp.next;
+  }
+  return length;
+};
+
+LinkedList.prototype.getHead = function() {
+  return this.head;
+}
+
+LinkedList.prototype.toString = function() {
+  var current = this.head;
+  var string = "List: ";
+  while (current) {
+    string += current.element + (current.next ? " -> " : "");
+    current = current.next;
+  }
+  return string;
+};
+
+LinkedList.prototype.print = function() {
+  console.log(this.toString());
+};
+//-----------------------------------------------------------------------------
+
+// test the new hash function
+var htb = new HashTable();
+htb.put("key1", "val1");
+htb.put("key2", "val2");
+htb.put("hello", "world");
+htb.print();
+
+// 2. Use a dictionary to store phone numbers that map to names like a phone
+//    book. Enter at least 5 phone numbers (do not use real information).
+
+// import dictionary
+
+function Dictionary() {
+  this.items = {};
+}
+
+Dictionary.prototype.set = function(key, value) {
+  // add a new key-value pair to the dictionary
+  this.items[key] = value;
+};
+
+Dictionary.prototype.delete = function(key) {
+  // delete a key-value pair
+  if (this.has(key)) {
+    delete this.items[key];
+    return true;
+  }
+  return false;
+};
+
+Dictionary.prototype.has = function(key) {
+  // return true if key is in the dictionary, false otherwise
+  return this.items.hasOwnProperty(key);
+};
+
+Dictionary.prototype.get = function(key) {
+  // return the value that matches key
+  return this.has(key) ? this.items[key] : undefined;
+};
+
+Dictionary.prototype.clear = function() {
+  // remove all key-value pairs
+  this.items = {};
+};
+
+Dictionary.prototype.size = function() {
+  // return the number of key-value pairs
+  return Object.keys(this.items).length;
+};
+
+Dictionary.prototype.keys = function() {
+  // return an array of all the keys
+  return Object.keys(this.items);
+};
+
+Dictionary.prototype.values = function() {
+  // return an array of all the values
+  var values = [];
+  for (var key in this.items) {
+    values.push(this.items[key]);
+  }
+  return values;
+};
+
+Dictionary.prototype.getItems = function() {
+  return this.items;
+};
+
+// first phone book
+var pb1 = new Dictionary();
+pb1.set("Name 1", "412-412-0000");
+pb1.set("Name 2", "412-412-1111");
+pb1.set("Name 4", "412-412-3333");
+pb1.set("Name 5", "412-412-4444");
+
+// second phone book
+var pb2 = new Dictionary();
+pb2.set("Name 1", "412-412-0000");
+pb2.set("Name 3", "412-412-2222");
+pb2.set("Name 5", "412-412-5555");
+// this last one is inconsistent
+// Name 5 maps to both 412-412-4444 and 412-412-5555
+
+// 3. Create a function that takes two phone books and checks whether the
+//    numbers are mapped consistently. This means that if a phone number
+//    appears in both phone books, they should map to exactly the same name. It
+//    returns true when this is the case, false otherwise. Test your code.
+//    NOTE: An algorithm like this could be used when syncing contacts.
+
+function phoneBooksAreConsistent(pb1, pb2) {
+  var names = pb1.keys();
+  for (var i = 0; i < names.length; i++) {
+    var name = names[i];
+    if (pb2.has(name)) {
+      // both pb1 and pb2 contain name so compare the numbers
+      if (pb1.get(name) !== pb2.get(name)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+console.log(phoneBooksAreConsistent(pb1, pb2) === false);
+
+
+
+//--------------//
+// Review Trees //
+//--------------//
+console.log("Trees");
+
+// 1. Given a value, find the number in a binary search tree that is closest.
+//    For example, if the given value is 13 and the tree contains 3, 5, 15, 23,
+//    and 37 the number that should be returned is 15.
+
+// import the binary search tree code
+
+// call this BSTNode so that it does not conflict with linked list nodes
+function BSTNode(key) {
+  this.key = key;
+  this.left = null;
+  this.right = null
+}
+
+function BinarySearchTree() {
+  // the root node
+  this.root = null;
+}
+
+// helper functions
+BinarySearchTree.prototype._insertNode = function(node, newNode) {
+  // node is the node we want to insert into
+  // newNode is the node we want to insert
+  if (newNode.key < node.key) {
+    // go to left
+    if (node.left === null) {
+      // no left node yet so assign
+      node.left = newNode;
+    }
+    else {
+      // move down tree and repeat
+      this._insertNode(node.left, newNode);
+    }
+  }
+  else {
+    // go to right
+    if (node.right === null) {
+      // no right node yet so assign
+      node.right = newNode;
+    }
+    else {
+      // move down tree and repeat
+      this._insertNode(node.right, newNode);
+    }
+  }
+}
+
+BinarySearchTree.prototype.insert = function(key) {
+  // insert new key in the tree
+  var newNode = new BSTNode(key);
+  if (this.root === null) {
+    // no nodes yet
+    this.root = newNode;
+  }
+  else {
+    // find insert location through insertNode
+    this._insertNode(this.root, newNode);
+  }
+};
+
+BinarySearchTree.prototype._searchNode = function(node, key) {
+  if (node === null) {
+    return false;
+  }
+  if (node.key === key) {
+    return true;
+  }
+  if (key < node.key) {
+    return this._searchNode(node.left, key);
+  }
+  else {
+    return this._searchNode(node.right, key);
+  }
+}
+
+BinarySearchTree.prototype.search = function(key) {
+  // search for key and return true if found, false otherwise
+  return this._searchNode(this.root, key);
+};
+
+BinarySearchTree.prototype.inOrderTraverse = function(callback) {
+  function inOrderTraverseNode(node, callback) {
+    if (node !== null) {
+      inOrderTraverseNode(node.left, callback);
+      callback(node.key);
+      inOrderTraverseNode(node.right, callback);
+    }
+  }
+  // visit all nodes of the tree using in-order traversal
+  // call callback with each key encountered
+  inOrderTraverseNode(this.root, callback);
+};
+
+BinarySearchTree.prototype.preOrderTraverse = function(callback) {
+  function preOrderTraverseNode(node, callback) {
+    if (node !== null) {
+      callback(node.key);
+      preOrderTraverseNode(node.left, callback);
+      preOrderTraverseNode(node.right, callback);
+    }
+  }
+  // visit all nodes of the tree using pre-order traversal
+  // call callback with each key encountered
+  preOrderTraverseNode(this.root, callback);
+};
+
+BinarySearchTree.prototype.postOrderTraverse = function(callback) {
+  function postOrderTraverseNode(node, callback) {
+    if (node !== null) {
+      postOrderTraverseNode(node.left, callback);
+      postOrderTraverseNode(node.right, callback);
+      callback(node.key);
+    }
+  }
+  // visit all nodes of the tree using post-order traversal
+  // call callback with each key encountered
+  postOrderTraverseNode(this.root, callback);
+};
+
+BinarySearchTree.prototype.min = function() {
+  function minNode(node) {
+    if (node === null) {
+      return null;
+    }
+    while (node.left !== null) {
+      node = node.left;
+    }
+    return node.key;
+    /*
+    if (node.left === null) {
+      return node.key;
+    }
+    else {
+      return minNode(node.left);
+    }
+    */
+  }
+  // return the minimum key in the tree
+  return minNode(this.root);
+};
+
+BinarySearchTree.prototype.max = function() {
+  function maxNode(node) {
+    if (node === null) {
+      return null;
+    }
+    while (node.right !== null) {
+      node = node.right;
+    }
+    return node.key;
+    /*
+    if (node.right === null) {
+      return node.key;
+    }
+    else {
+      return maxNode(node.right);
+    }
+    */
+  }
+  // return the maximum key in the tree
+  return maxNode(this.root);
+};
+
+BinarySearchTree.prototype.print = function() {
+  function print(node) {
+    // check if not is not null
+    if (node !== null) {
+      // text for left child
+      var leftChild = node.left !== null ? node.left.key : "None";
+      // text for right child
+      var rightChild = node.right !== null ? node.right.key : "None";
+      // print output
+      console.log(leftChild + " <-- " + node.key + " --> " + rightChild);
+      // traverse left
+      print(node.left);
+      // traverse right
+      print(node.right);
+    }
+  }
+  console.log("===tree===");
+  print(this.root);
+  console.log("==========");
+};
+
+// this is the main function that finds the closest match
+function findClosestMatch(tree, searchFor) {
+  var bestNumber = -1;
+  var minDistance = -1;
+  // traverse all values
+  tree.inOrderTraverse(function(x) {
+    if (minDistance === -1 || Math.abs(x - searchFor) < minDistance) {
+      // we found a new closest number
+      minDistance = Math.abs(x - searchFor);
+      bestNumber = x;
+    }
+  });
+  // return the closest number we found
+  return bestNumber;
+}
+
+// construct tree and test code
+var tree = new BinarySearchTree();
+tree.insert(15);
+tree.insert(3);
+tree.insert(5);
+tree.insert(23);
+tree.insert(37);
+console.log(findClosestMatch(tree, 13) === 15);
+console.log(findClosestMatch(tree, 31) === 37);
+
+
+
+//---------------//
+// Review Graphs //
+//---------------//
+console.log("Graphs");
+
+// 1. Implement an algorithm that checks whether an undirected graph contains
+//    a cycle. Use the graph data structure that uses the adjacency list as
+//    internal representation.
+
+// Note: this is quite a difficult question. The basic idea is to do a
+//       breadth-first search and if we traverse the same node twice, there
+//       must be a cycle
+
+// we already included the dictionary
+
+// import queue
+function Queue() {
+  // properties and methods go here
+  this.items = [];
+}
+
+// methods go here using Queue.prototype.
+
+Queue.prototype.enqueue = function(element) {
+  this.items.push(element);
+};
+
+Queue.prototype.dequeue = function() {
+  return this.items.shift();
+};
+
+Queue.prototype.front = function() {
+  return this.items[0];
+};
+
+Queue.prototype.isEmpty = function() {
+  return this.items.length === 0;
+};
+
+Queue.prototype.size = function() {
+  return this.items.length;
+};
+
+Queue.prototype.print = function() {
+  console.log(this.items.toString());
+};
+
+function Graph() {
+  var vertices = [];
+  var adjList = new Dictionary();
+
+  this.addVertex = function(v) {
+    vertices.push(v);
+    adjList.set(v, []);
+  };
+
+  this.addEdge = function(v, w) {
+    adjList.get(v).push(w);
+    adjList.get(w).push(v);
+  };
+
+  function initializeColor() {
+    var color = {}; // is better than []
+    for (var i = 0; i < vertices.length; i++) {
+      color[vertices[i]] = "white";
+    }
+    return color;
+  }
+
+  this.bfs = function(v, callback) {
+    var color = initializeColor();
+    var queue = new Queue();
+    queue.enqueue(v);
+    while (!queue.isEmpty()){
+      var u = queue.dequeue();
+      var neighbors = adjList.get(u);
+      color[u] = "grey";
+      for (var i = 0; i < neighbors.length; i++) {
+        var w = neighbors[i];
+        if (color[w] === "white") {
+          color[w] = "grey";
+          queue.enqueue(w);
+        }
+      }
+      color[w] = "black";
+      if(callback) {
+        callback(u);
+      }
+    }
+  };
+
+  function dfsVisit(u, color, callback) {
+    color[u] = "grey";
+    if (callback) {
+      callback(u);
+    }
+    var neighbors = adjList.get(u);
+    for (var i = 0; i < neighbors.length; i++) {
+      var w = neighbors[i];
+      if (color[w] === "white") {
+        dfsVisit(w, color, callback);
+      }
+    }
+    color[u] = "black";
+  }
+
+  this.dfs = function(v, callback) {
+    var color = initializeColor();
+    dfsVisit(v, color, callback);
+  };
+
+  this.toString = function() {
+    var s = "";
+    for (var i = 0; i < vertices.length; i++) {
+      s += vertices[i] + " ->";
+      var neighbors = adjList.get(vertices[i]);
+      for (var j = 0; j < neighbors.length; j++) {
+        s += " " + neighbors[j];
+      }
+      s += "\n";
+    }
+    return s;
+  };
+
+  function cycleVisit(u, color) {
+    // this is modified from bfs
+    color[u] = "grey";
+    var neighbors = adjList.get(u);
+    for (var i = 0; i < neighbors.length; i++) {
+      var w = neighbors[i];
+      if (color[w] === "black") {
+        // already visited so there must be a cycle
+        return true;
+      }
+      if (color[w] === "white") {
+        if (cycleVisit(w, color)) {
+          // once we find a cycle we can stop searching and return true
+          return true;
+        }
+      }
+    }
+    color[u] = "black";
+    return false;
+  }
+
+  this.hasCycle = function() {
+    // the idea is to do a breadth-first search in all directions starting
+    // at node 1. if we visit one node twice there must be a cycle
+    var color = initializeColor();
+    return cycleVisit(vertices[0], color);
+  };
+}
+
+// use the graph class above to construct a graph and search for cycles
+
+var graph = new Graph();
+var myVertices = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+for (var i = 0; i < myVertices.length; i++) {
+  graph.addVertex(myVertices[i]);
+}
+graph.addEdge("A", "B");
+graph.addEdge("A", "C");
+graph.addEdge("C", "D");
+graph.addEdge("C", "G");
+graph.addEdge("D", "H");
+graph.addEdge("B", "E");
+graph.addEdge("B", "F");
+graph.addEdge("E", "I");
+
+console.log(graph.toString());
+console.log(graph.hasCycle() === false);
+graph.addEdge("A", "D");
+graph.addEdge("D", "G");
+console.log(graph.hasCycle() === true);
+
+
+
+//-----------------------------------------//
+// Review Sorting and Searching Algorithms //
+//-----------------------------------------//
+console.log("Sorting and Searching Algorithms");
+
+// 1. Create two arrays with random unique numbers and sort them. Create a
+//    function that takes these two arrays as input and returns a third array
+//    that contains all the elements from both arrays in order. Make the
+//    algorithm as fast as possible.
+
+// NOTE: the fast solution is very similar to merge sort.
+
+function combine(list1, list2) {
+  // return a new array that contains all elements from list1 and list2 sorted
+  var list3 = [];
+  /*
+  // slow version
+  for (var i = 0; i < list1.length; i++) {
+    list3.push(list1[i]);
+  }
+  for (var i = 0; i < list2.length; i++) {
+    list3.push(list2[i]);
+  }
+  list3.sort();
+  */
+  // fast version
+  var i = 0;
+  var j = 0;
+  while (true) {
+    // walk through list1 and list2 at the same time and keep adding the
+    // smallest number to list3
+    if (i >= list1.length && j >= list2.length) {
+      // we are done
+      break;
+    }
+    else if (i >= list1.length) {
+      // list 1 is empty, only elements left in list 2
+      list3.push(list2[j]);
+      // go to next element.
+      j++;
+    }
+    else if (j >= list2.length) {
+      // list 2 is empty, only elements left in list 1
+      list3.push(list1[i]);
+      // go to next element.
+      i++;
+    }
+    else if (list1[i] < list2[j]) {
+      // list1 contains the smaller element
+      list3.push(list1[i]);
+      // go to next element.
+      i++;
+    }
+    else if (list2[j]) {
+      // list2 contains the smaller element
+      list3.push(list2[j]);
+      // go to next element.
+      j++;
+    }
+  }
+  return list3;
+}
+
+// test the code
+var list1 = [9, 1, 3, 5];
+var list2 = [2, 7, 4];
+list1.sort();
+list2.sort();
+console.log(combine(list1, list2));
+
+// 2. Implement a linear search that returns the number closest to a given
+//    number (instead of returning the index of element, if found).
+
+function findClosestMatchLinearSearch(numbers, searchFor) {
+  var minNum = -1;
+  var bestNumber = -1;
+  var minDistance = -1;
+  for (var i = 0; i < numbers.length; i++) {
+    if (minDistance === -1 || Math.abs(numbers[i] - searchFor) < minDistance) {
+      minDistance = Math.abs(numbers[i] - searchFor);
+      bestNumber = numbers[i];
+    }
+  }
+  return bestNumber;
+}
+var numbers = [2, 34, 4, 43, 20];
+console.log(findClosestMatchLinearSearch(numbers, 23) === 20);
+console.log(findClosestMatchLinearSearch(numbers, 40) === 43);
+
+// 3. Implement a binary search that returns the number closest to a given
+//    number (instead of returning the index of element, if found).
+
+// Store the number is a binary search tree, and then use the
+// findClosestMatch() function above.
+
+
+
+//------------------------------//
+// Review Patterns of Algorithm //
+//------------------------------//
+console.log("Review Patterns of Algorithm");
+
+// 1. Write a recursive function multiply(a, b) where a and a are both positive
+//    integers and you can only use the + and - operators.
+
+function multiply(a, b) {
+  if (a === 0) {
+    return 0;
+  }
+  else {
+    // add b to the total a times
+    return b + multiply(a-1, b);
+  }
+}
+console.log(multiply(3, 4) === 12);
+
+// 2. Write a function that reverses a string with recursion.
+
+function reverse(str) {
+  if (str.length === 0) {
+    return "";
+  }
+  else {
+    // get the last character
+    var char = str[str.length-1];
+    // get the other characters
+    var other = str.substring(0, str.length-1);
+    return char + reverse(other);
+  }
+}
+console.log(reverse("hello world") === "dlrow olleh");
+
+
+
+//-----------------------------//
+// Review Algorithm Complexity //
+//-----------------------------//
+console.log("Algorithm Complexity");
+
+// 1. Assess the complexity of all previous implementations.
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Solve Project Euler problem 1, see https://projecteuler.net/problem=1
+//    Also check out https://en.wikipedia.org/wiki/Fizz_buzz
+
+var sum = 0;
+for (var i = 1; i < 1000; i++) {
+  // check if multiples of 3 or 5
+  if (i%3 === 0 || i%5 === 0) {
+    sum += i;
+  }
+}
+console.log("Euler problem 1: " + sum);
+
+// FizzBuzz
+for (var i = 1; i <= 100; i++) {
+  if (i%3===0 && i%5===0) {
+    console.log("FizzBuzz");
+  }
+  else if (i%3===0) {
+    console.log("Fizz");
+  }
+  else if (i%5===0) {
+    console.log("Buzz");
+  }
+  else {
+    console.log(i);
+  }
+  /*
+  console.log(i);
+  if (i%3===0) {
+    console.log("Fizz");
+  }
+  if (i%5===0) {
+    console.log("Buzz");
+  }
+  */
+}
+
+// 2. Solve Project Euler problem 2, see https://projecteuler.net/problem=2
+
+var fibonacci = [1, 2];
+var sum = 2; // we already have 2 in the array
+var i = 2; // we already have two elements in the array
+do {
+  // store the next fibonacci element
+  fibonacci[i] = fibonacci[i-2] + fibonacci[i-1];
+  if (fibonacci[i] % 2 === 0) {
+    // even fibonacci so sum
+    sum += fibonacci[i];
+  }
+} while (fibonacci[i++] < 4000000); // iterate until this value
+console.log("Euler problem 2: " + sum);
+
+// 3. The following data represents the value of a stock over several days:
+//    100, 180, 260, 310, 40, 535, 695. Suppose you can buy and sell one share
+//    once over that time period. Write a program that calculates what the best
+//    time is for buying and selling.
+
+var values = [100, 180, 260, 310, 40, 535, 695];
+var buy = -1;
+var sell = -1;
+var profit = -999999;
+// i is the index for when we buy
+for (var i = 0; i < values.length; i++) {
+  // j is the index for when we sell
+  // (which starts after i, because we have to buy first)
+  for (var j = i+1; j < values.length; j++) {
+    // buy at i, sell at j
+    if (values[j] - values[i] > profit) {
+      // we found a better time to buy and sell
+      profit = values[j] - values[i];
+      buy = i;
+      sell = j;
+    }
+  }
+}
+console.log("Buy at " + values[buy]);
+console.log("Sell at " + values[sell]);
+console.log("For profit " + profit);
+
+// 4. ...
+
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>

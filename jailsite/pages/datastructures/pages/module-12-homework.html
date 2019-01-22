@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 12 Homework</title>
+<style>* { font-family: monospace; }</style>
+<script>
+//-----------//
+// Recursion //
+//-----------//
+console.log("Recursion");
+
+// 1. Implement factorial using a recursive function and test your code.
+
+function factorial(n){
+  if (n === 1) {
+    return 1;
+  }
+  else {
+    return (factorial(n-1) * n);
+  }
+}
+
+console.log("Factorial of 10:")
+console.log(factorial(10));
+
+//---------------------//
+// Dynamic programming //
+//---------------------//
+console.log("Dynamic programming");
+
+// 1. Implement finding the longest common subsequence using dynamic
+//    programming. Test your code.
+
+function lcs (wordX, wordY){
+
+  var m = wordX.length,
+  n = wordY.length,
+  l = [],
+  i, j, a, b,
+  solution = [];
+
+  for(i = 0; i <= m; ++i) {
+    l[i] = [];
+    solution[i] = [];
+    for(j = 0; j <= n; ++j) {
+      l[i][j] = 0;
+      solution[i][j] = '0';
+    }
+  }
+
+  for(i = 0; i <= m; i++) {
+    for(j = 0; j <= n; j++) {
+      if(i === 0 || j === 0) {
+        l[i][j] = 0;
+      }
+      else if(wordX[i-1] == wordY[j-1]) {
+        l[i][j] = l[i-1][j-1] + 1;
+            solution[i][j] = 'diagonal';
+      } else {
+        a = l[i-1][j];
+        b = l[i][j-1];
+        l[i][j] = (a > b) ? a: b;
+        solution[i][j] = (l[i][j] == l[i-1][j] ? 'top' : 'left');
+      }
+    }
+  }
+  printSolution(solution, l,  wordX, wordY, m, n);
+  return l[m][n];
+}
+
+function printSolution(solution, l, wordX, wordY, m, n){
+  var a = m, b = n, i, j,
+  x = solution[a][b],
+  answer = '';
+
+while(x !== '0') {
+  if(solution[a][b] === 'diagonal') {
+    answer = wordX[a-1] + answer;
+    a--;
+    b--;
+  }
+  else if(solution[a][b] === 'left') {
+    b--;
+  }
+  else if(solution[a][b] === 'top') {
+    a--;
+  }
+  x = solution[a][b];
+}
+  console.log('LCS: ' + answer);
+}
+
+lcs('acbaed', 'abcadf');
+
+
+//-------------------//
+// Greedy algorithms //
+//-------------------//
+console.log("Greedy algorithms");
+
+// 1. Skip.
+
+
+
+//----------------------------------------//
+// Introduction to functional programming //
+//----------------------------------------//
+console.log("Introduction to functional programming");
+
+// 1. Solve the problem of summing all the numbers in an array using
+//    imperative style.
+
+var sumValues = function(array){
+ var total = array[0];
+ for (var i=1; i<array.length; i++){
+   total += array[i];
+ }
+ return total;
+};
+console.log("Imperative: " + sumValues([1, 2, 3, 4, 5]))
+
+// 2. Solve the problem of summing all the numbers in an array using
+//    functional style.
+
+var sum_ = function(array){
+ return array.reduce(function(a, b){
+ return a + b;
+ })
+};
+console.log("Functional: " + sum_([1, 2, 3, 4, 5]));
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Solve problem 14 of Project Euler: https://projecteuler.net/problem=14
+//    Note: This may be a bit challenging. Try to get as far as you can.
+//          Instead of one million you could use a smaller number for testing.
+
+function collatz(n) {
+var arr = [n];
+var tmpArr = [];
+
+for(var i = n; i > 0; i--) {
+  if(n % 2 === 0) {
+    n = n / 2;
+  } else {
+    if(n === 1) {
+      break;
+    }
+    n = (3 * n) + 1;
+  }
+  arr.push(n);
+}
+
+if(tmpArr.length > arr.length) {
+  arr = biggestChainArr;
+  }
+  return arr;
+}
+
+var num = 1000000;
+var biggestStarter;
+var biggestChainArr = [];
+for(var i = num; i > 0; i--){
+  if(collatz(i).length > biggestChainArr.length){
+    biggestChainArr = collatz(i);
+    biggestStarter = i;
+  }
+}
+
+console.log("The biggest chain found was:");
+console.log(biggestChainArr);
+console.log("The starting number with the largest chain is " + biggestStarter + " with a size of " + biggestChainArr.length + ".");
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
